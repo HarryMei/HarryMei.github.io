@@ -14,7 +14,7 @@
 <meta property="og:description" content="前言本文的目的是总结和记录我自己在使用jupyter notebook过程中，学到的一些非常好用的功能或者容易遗忘小技巧。 模式切换与快捷键用了好久的jupyter notebook，才知道原来它还有两种不同的模式：命令模式和编辑模式，以下列出在模式切换和不同模式下功能的快捷键： 式切换 ESC：进入命令模式 Enter：进入编辑模式  模式下的常用的快捷键 Ctrl+Enter：运行本单元 Sh">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/markdownImage/Nbextensions.jpg">
-<meta property="og:updated_time" content="2018-05-19T07:30:00.647Z">
+<meta property="og:updated_time" content="2018-05-19T07:33:07.655Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jupyer Notebook使用技巧">
 <meta name="twitter:description" content="前言本文的目的是总结和记录我自己在使用jupyter notebook过程中，学到的一些非常好用的功能或者容易遗忘小技巧。 模式切换与快捷键用了好久的jupyter notebook，才知道原来它还有两种不同的模式：命令模式和编辑模式，以下列出在模式切换和不同模式下功能的快捷键： 式切换 ESC：进入命令模式 Enter：进入编辑模式  模式下的常用的快捷键 Ctrl+Enter：运行本单元 Sh">
@@ -282,13 +282,13 @@
 <li><strong>Ctrl+Shift+-</strong>：分割单元</li>
 </ul>
 <h2 id="激活和关闭交互式的matplotlib图标"><a href="#激活和关闭交互式的matplotlib图标" class="headerlink" title="激活和关闭交互式的matplotlib图标"></a>激活和关闭交互式的matplotlib图标</h2><p>在jupyter notebook中使用matplotlib画图，在普通情况下，只能输出图标格式化后静态的的图像，而没有交互的功能。如果我们需要交互功能需要在c<br>ell中执行如下命令：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib notebook</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib notebook</span><br></pre></td></tr></table></figure>
 <p>如果不再需要交互式的输出，则可以需要关闭它：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
 <h2 id="在cell中运行shell命令"><a href="#在cell中运行shell命令" class="headerlink" title="在cell中运行shell命令"></a>在cell中运行shell命令</h2><p>jupyter提供“！”作为unix command的前导符合，来运行shell命令，如：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">!python --version</span><br><span class="line">!ls</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">!python --version</span><br><span class="line">!ls</span><br></pre></td></tr></table></figure>
 <h2 id="为Jupyter-Notebook添加目录功能"><a href="#为Jupyter-Notebook添加目录功能" class="headerlink" title="为Jupyter Notebook添加目录功能"></a>为Jupyter Notebook添加目录功能</h2><h3 id="在jupyter中添加侧边栏目录"><a href="#在jupyter中添加侧边栏目录" class="headerlink" title="在jupyter中添加侧边栏目录"></a>在jupyter中添加侧边栏目录</h3><p>原始的Jupyter是不支持markdown添加目录功能的，不过我们可以可以利用Jupyter notebook<br>extensions去使得这种功能实现，首先安装jupyter_contrib_nbextensions：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge jupyter_contrib_nbextensions</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge jupyter_contrib_nbextensions</span><br></pre></td></tr></table></figure>
 <p>当安装好以后就会发现jupyter上方的菜单中多出了一个Nbextensions的菜单如下图：</p>
 <p><img src="Image/Nbextensions.jpg" alt="Nbextensions"></p>
 <p>将Tabel of Contents勾选即可，而在Nbextension还有需要有趣的插件可以去探索。</p>
@@ -296,19 +296,19 @@
 <p><img src="Image/header.jpg" alt="目录链接"></p>
 <h2 id="修改jupyter的工作空间"><a href="#修改jupyter的工作空间" class="headerlink" title="修改jupyter的工作空间"></a>修改jupyter的工作空间</h2><p>修改工作空间有两种方法，一是在进入需要修改的目录中，然后在这个目录下打开jupyter，那么打开的jupyter<br>notebook就会将当前目录做工作空间；二是修改配置文件。</p>
 <p>第一种放简单灵活，是我们的首选，但是在Window下命令行启用jupyter，有时候修改工作空间是无效的，所以只能修改配置文件了。配置文件为：jupyter_n<br>otebook_config.py，如果不存在则需要手动创建，执行如下命令：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br></pre></td></tr></table></figure>
 <p>在jupyter_notebook_config.py文件中找到如下内容，并将c.NotebookApp.notebook_dir的值修改为需要指定的目录:</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># The directory to use for notebooks and kernels.</span><br><span class="line">c.NotebookApp.notebook_dir = u&apos;D:\Jupyter&apos;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The directory to use for notebooks and kernels.</span></span><br><span class="line">c.NotebookApp.notebook_dir = <span class="string">u'D:\Jupyter'</span></span><br></pre></td></tr></table></figure>
 <h2 id="为jupyter添加内核"><a href="#为jupyter添加内核" class="headerlink" title="为jupyter添加内核"></a>为jupyter添加内核</h2><h4 id="添加新python内核"><a href="#添加新python内核" class="headerlink" title="添加新python内核"></a>添加新python内核</h4><p>以python为例，一般可能有两种情况需要增加内核，一是系统中同时安装了不同版本的python，如python2和python3，二是使用conda等工具创建的<br>不同的python运行环境，在这里我假定是第二种情况。</p>
 <p>首先需要安装ipykernel，注意是在要添加的环境中，如下我们先创建了一个虚拟环境，然后在其中安装ipykernel：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda create -n py36-test python=3.6</span><br><span class="line">source activate py36-test</span><br><span class="line">conda install ipykernel</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda create -n py36-test python=<span class="number">3.6</span></span><br><span class="line">source activate py36-test</span><br><span class="line">conda install ipykernel</span><br></pre></td></tr></table></figure>
 <p>然后执行如下命令，注意同样是需要在要添加的环境下，下面命令中的python指的就是你要添加的内核，–name是你指定jupyter中添加内核的名字：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m ipykernel install --name py36-test</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m ipykernel install --name py36-test</span><br></pre></td></tr></table></figure>
 <p>安装好后就可以在jupyter notebook中Kernel菜单的Change Kernel中看到</p>
 <h4 id="查看和删除内核"><a href="#查看和删除内核" class="headerlink" title="查看和删除内核"></a>查看和删除内核</h4><p>查看内核：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec list</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec list</span><br></pre></td></tr></table></figure>
 <p>删除内核：</p>
-<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec remove kernelname</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec remove kernelname</span><br></pre></td></tr></table></figure>
 
         
         </div>
@@ -319,7 +319,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjhd2pegj0001gsvdsavl36nv" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjhd2ueh20005t8vdzhx6rpuj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
