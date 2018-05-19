@@ -14,7 +14,7 @@
 <meta property="og:description" content="前言本文的目的是总结和记录我自己在使用jupyter notebook过程中，学到的一些非常好用的功能或者容易遗忘小技巧。 模式切换与快捷键用了好久的jupyter notebook，才知道原来它还有两种不同的模式：命令模式和编辑模式，以下列出在模式切换和不同模式下功能的快捷键： 式切换 ESC：进入命令模式 Enter：进入编辑模式  模式下的常用的快捷键 Ctrl+Enter：运行本单元 Sh">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/markdownImage/Nbextensions.jpg">
-<meta property="og:updated_time" content="2018-05-19T07:33:07.655Z">
+<meta property="og:updated_time" content="2018-05-19T07:35:58.735Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jupyer Notebook使用技巧">
 <meta name="twitter:description" content="前言本文的目的是总结和记录我自己在使用jupyter notebook过程中，学到的一些非常好用的功能或者容易遗忘小技巧。 模式切换与快捷键用了好久的jupyter notebook，才知道原来它还有两种不同的模式：命令模式和编辑模式，以下列出在模式切换和不同模式下功能的快捷键： 式切换 ESC：进入命令模式 Enter：进入编辑模式  模式下的常用的快捷键 Ctrl+Enter：运行本单元 Sh">
@@ -290,10 +290,10 @@
 <h2 id="为Jupyter-Notebook添加目录功能"><a href="#为Jupyter-Notebook添加目录功能" class="headerlink" title="为Jupyter Notebook添加目录功能"></a>为Jupyter Notebook添加目录功能</h2><h3 id="在jupyter中添加侧边栏目录"><a href="#在jupyter中添加侧边栏目录" class="headerlink" title="在jupyter中添加侧边栏目录"></a>在jupyter中添加侧边栏目录</h3><p>原始的Jupyter是不支持markdown添加目录功能的，不过我们可以可以利用Jupyter notebook<br>extensions去使得这种功能实现，首先安装jupyter_contrib_nbextensions：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge jupyter_contrib_nbextensions</span><br></pre></td></tr></table></figure>
 <p>当安装好以后就会发现jupyter上方的菜单中多出了一个Nbextensions的菜单如下图：</p>
-<p><img src="Image/Nbextensions.jpg" alt="Nbextensions"></p>
+<p><img src="/markdownImage/Nbextensions.jpg" alt="Nbextensions"></p>
 <p>将Tabel of Contents勾选即可，而在Nbextension还有需要有趣的插件可以去探索。</p>
 <h3 id="在文本头增目录"><a href="#在文本头增目录" class="headerlink" title="在文本头增目录"></a>在文本头增目录</h3><p>上面是使用插件生成侧边栏目录，如果只需要在文章的头部生成目录则可以用另外的方法。在纯Markdown文本中是能够使用“[TOC]”来自动生成文章头部目录的，但是<br>在jupyter notebook的cell中无法使用，我们只能通过创建文本内部的链接，手动创建目录，如下所示：</p>
-<p><img src="Image/header.jpg" alt="目录链接"></p>
+<p><img src="/markdownImage/header.jpg" alt="目录链接"></p>
 <h2 id="修改jupyter的工作空间"><a href="#修改jupyter的工作空间" class="headerlink" title="修改jupyter的工作空间"></a>修改jupyter的工作空间</h2><p>修改工作空间有两种方法，一是在进入需要修改的目录中，然后在这个目录下打开jupyter，那么打开的jupyter<br>notebook就会将当前目录做工作空间；二是修改配置文件。</p>
 <p>第一种放简单灵活，是我们的首选，但是在Window下命令行启用jupyter，有时候修改工作空间是无效的，所以只能修改配置文件了。配置文件为：jupyter_n<br>otebook_config.py，如果不存在则需要手动创建，执行如下命令：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br></pre></td></tr></table></figure>
@@ -319,7 +319,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjhd2ueh20005t8vdzhx6rpuj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjhd2wqgx0005o8vdl11pjdb9" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
