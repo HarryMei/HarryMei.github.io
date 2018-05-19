@@ -3,25 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作 | Harry Mei&#39;Blog</title>
+    <title>Jupyer Notebook使用技巧 | Harry Mei&#39;Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="引言《图像与视频处理》第三章的内容，前半段是直方图讲解，后半段则是对图像一些简单滤波和增强处理的讲解，主要包括均值滤波、非局部均值滤波、中值滤波以及图像的增强。 从效果上来看，这些处理对图像的影响就是三方面：模糊、去噪和 增强。由于这些概念理解起来相对简单，并没有涉及到比较复杂的滤波器，所以我这里就合在一起说明。 以下为上面三种的滤波器简单对比    处理方法 作用     均值滤波 主要对图像进">
-<meta name="keywords" content="python,图像处理,MOOC,openCV">
+    <meta name="description" content="前言本文的目的是总结和记录我自己在使用jupyter notebook过程中，学到的一些非常好用的功能或者容易遗忘小技巧。 模式切换与快捷键用了好久的jupyter notebook，才知道原来它还有两种不同的模式：命令模式和编辑模式，以下列出在模式切换和不同模式下功能的快捷键： 式切换 ESC：进入命令模式 Enter：进入编辑模式  模式下的常用的快捷键 Ctrl+Enter：运行本单元 Sh">
+<meta name="keywords" content="jupyer,markdown">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作">
-<meta property="og:url" content="http://yoursite.com/2016/08/13/图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作/index.html">
+<meta property="og:title" content="Jupyer Notebook使用技巧">
+<meta property="og:url" content="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/index.html">
 <meta property="og:site_name" content="Harry Mei&#39;Blog">
-<meta property="og:description" content="引言《图像与视频处理》第三章的内容，前半段是直方图讲解，后半段则是对图像一些简单滤波和增强处理的讲解，主要包括均值滤波、非局部均值滤波、中值滤波以及图像的增强。 从效果上来看，这些处理对图像的影响就是三方面：模糊、去噪和 增强。由于这些概念理解起来相对简单，并没有涉及到比较复杂的滤波器，所以我这里就合在一起说明。 以下为上面三种的滤波器简单对比    处理方法 作用     均值滤波 主要对图像进">
+<meta property="og:description" content="前言本文的目的是总结和记录我自己在使用jupyter notebook过程中，学到的一些非常好用的功能或者容易遗忘小技巧。 模式切换与快捷键用了好久的jupyter notebook，才知道原来它还有两种不同的模式：命令模式和编辑模式，以下列出在模式切换和不同模式下功能的快捷键： 式切换 ESC：进入命令模式 Enter：进入编辑模式  模式下的常用的快捷键 Ctrl+Enter：运行本单元 Sh">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/markdownImage/avg.gif">
-<meta property="og:image" content="http://yoursite.com/markdownImage/chengbao.jpg">
-<meta property="og:image" content="http://yoursite.com/markdownImage/chengbaoBlur.jpg">
-<meta property="og:image" content="http://yoursite.com/markdownImage/chengbaomedianBlur.jpg">
-<meta property="og:updated_time" content="2016-08-13T05:38:10.672Z">
+<meta property="og:image" content="http://yoursite.com/markdownImage/Nbextensions.jpg">
+<meta property="og:updated_time" content="2018-05-19T07:30:00.647Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作">
-<meta name="twitter:description" content="引言《图像与视频处理》第三章的内容，前半段是直方图讲解，后半段则是对图像一些简单滤波和增强处理的讲解，主要包括均值滤波、非局部均值滤波、中值滤波以及图像的增强。 从效果上来看，这些处理对图像的影响就是三方面：模糊、去噪和 增强。由于这些概念理解起来相对简单，并没有涉及到比较复杂的滤波器，所以我这里就合在一起说明。 以下为上面三种的滤波器简单对比    处理方法 作用     均值滤波 主要对图像进">
-<meta name="twitter:image" content="http://yoursite.com/markdownImage/avg.gif">
+<meta name="twitter:title" content="Jupyer Notebook使用技巧">
+<meta name="twitter:description" content="前言本文的目的是总结和记录我自己在使用jupyter notebook过程中，学到的一些非常好用的功能或者容易遗忘小技巧。 模式切换与快捷键用了好久的jupyter notebook，才知道原来它还有两种不同的模式：命令模式和编辑模式，以下列出在模式切换和不同模式下功能的快捷键： 式切换 ESC：进入命令模式 Enter：进入编辑模式  模式下的常用的快捷键 Ctrl+Enter：运行本单元 Sh">
+<meta name="twitter:image" content="http://yoursite.com/markdownImage/Nbextensions.jpg">
     
 
     
@@ -216,7 +213,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-JupyterNotebook使用技巧" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -224,7 +221,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作
+            Jupyer Notebook使用技巧
         </h1>
     
 
@@ -233,8 +230,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2016/08/13/图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作/">
-            <time datetime="2016-08-13T05:36:05.000Z" itemprop="datePublished">2016-08-13</time>
+        <a href="/2018/05/19/JupyterNotebook使用技巧/">
+            <time datetime="2018-05-19T07:23:05.000Z" itemprop="datePublished">2018-05-19</time>
         </a>
     </div>
 
@@ -242,13 +239,13 @@
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/图像处理/">图像处理</a>
+        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/开发工具环境/">开发工具环境</a>
     </div>
 
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/MOOC/">MOOC</a>, <a class="tag-link" href="/tags/openCV/">openCV</a>, <a class="tag-link" href="/tags/python/">python</a>, <a class="tag-link" href="/tags/图像处理/">图像处理</a>
+        <a class="tag-link" href="/tags/jupyer/">jupyer</a>, <a class="tag-link" href="/tags/markdown/">markdown</a>
     </div>
 
                     </div>
@@ -259,49 +256,59 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>《图像与视频处理》第三章的内容，前半段是直方图讲解，后半段则是对图像一些简单滤波和增强处理的讲解，主要包括均值滤波、非局部均值滤波、中值滤波以及图像的增强。</p>
-<p>从效果上来看，这些处理对图像的影响就是三方面：<em>模糊</em>、<em>去噪</em>和 <em>增强</em>。由于这些概念理解起来相对简单，并没有涉及到比较复杂的滤波器，所以我这里就合在一起说明。</p>
-<p>以下为上面三种的滤波器简单对比</p>
-<table>
-<thead>
-<tr>
-<th>处理方法</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>均值滤波</td>
-<td>主要对图像进行平滑操作，去噪的同时容易引起图像模糊</td>
-</tr>
-<tr>
-<td>非局部均值滤波</td>
-<td>有很好的去噪效果，但是查找的过程运算量大</td>
-</tr>
-<tr>
-<td>中值滤波</td>
-<td>对椒盐噪声的过滤具有非常好的效果</td>
-</tr>
-</tbody>
-</table>
-<h4 id="均值滤波"><a href="#均值滤波" class="headerlink" title="均值滤波"></a>均值滤波</h4><p>均值滤波非常简单，其操作为：在需要操作的像素点上选择其邻域部分，如下图为3x3的矩形区域，对这些点求均值，结果代替原始像素点的值。</p>
-<p><img src="/markdownImage/avg.gif" alt="均值滤波"></p>
-<p>当然选择区域的大小、形状是可以根据实际需求修改的，不同位置的像素的加权权重也是可以修改的。</p>
-<p>在openCV中提供均值滤波 <strong>blur</strong>函数，由于它是去除变化剧烈的高频部分，所以也可以算是低通滤波了。</p>
-<p>python+openCV代码实现均值滤波如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">img2 = cv2.blur(img, (<span class="number">3</span>,<span class="number">3</span>))</span><br></pre></td></tr></table></figure>
-<p>上面的代码是在3x3的矩形框了求取的均值，如果需要设置权重，可以使用filter2D()函数。</p>
-<p>均值处理后的图像如下：</p>
-<p><img src="/markdownImage/chengbao.jpg" alt="原图像"><br><img src="/markdownImage/chengbaoBlur.jpg" alt="均值滤波图像"></p>
-<h4 id="非局部均值滤波"><a href="#非局部均值滤波" class="headerlink" title="非局部均值滤波"></a>非局部均值滤波</h4><p>非局部均值滤波的原理是很简单的，即：选择处理的图像的小区，在整个图像上查找与区域相似度高的区域，对这些相似的区域对应点相加求平均，替换掉原来的值。</p>
-<p>在这个过程中相似区域的查找是很关键的一部分，不同设计者的判断标准不一样，可能会导致最终的效果有好有坏；另外由于需要在整个查找相似的区域，计算量也相对会大一些。</p>
-<h4 id="中值滤波"><a href="#中值滤波" class="headerlink" title="中值滤波"></a>中值滤波</h4><p>中值滤波与均值滤波类似，也十分简单，只是将求平均值的操作变成了找中间数的操作。正是由于这样，中值滤波不会产生新的值，知识用其他pixel的值代替处理的pxiel值，所以对图像的影响会比均值的影响小。</p>
-<p>中值滤波是非常简单且常用的滤波方法，它对椒盐噪声具有很强的滤波效果（椒盐噪声就是在图像上随机出现黑色白色的像素）。</p>
-<p>openCV中提供 <strong>medianBlur</strong>函数来处理中值滤波，medianBlur函数要求它的参数中的矩形框为正奇数，python+openCV代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">img2 = cv2.medianBlur(img, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<p>经过中值滤波后，图像如下：</p>
-<p><img src="/markdownImage/chengbaomedianBlur.jpg" alt="原图像"></p>
-<h4 id="边沿查找和图像增强"><a href="#边沿查找和图像增强" class="headerlink" title="边沿查找和图像增强"></a>边沿查找和图像增强</h4><p>通过对离散二维图像的数据求二阶导数，可以找到图像中变化较大的像素点。通过对原图像中的这些像素点的值进行增强，可以达到增强图像的效果。</p>
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文的目的是总结和记录我自己在使用jupyter notebook过程中，学到的一些非常好用的功能或者容易遗忘小技巧。</p>
+<h2 id="模式切换与快捷键"><a href="#模式切换与快捷键" class="headerlink" title="模式切换与快捷键"></a>模式切换与快捷键</h2><p>用了好久的jupyter notebook，才知道原来它还有两种不同的模式：<strong>命令模式</strong>和<strong>编辑模式</strong>，以下列出在模式切换和不同模式下功能的快捷键：</p>
+<h4 id="式切换"><a href="#式切换" class="headerlink" title="式切换"></a>式切换</h4><ul>
+<li><strong>ESC</strong>：进入命令模式</li>
+<li><strong>Enter</strong>：进入编辑模式</li>
+</ul>
+<h4 id="模式下的常用的快捷键"><a href="#模式下的常用的快捷键" class="headerlink" title="模式下的常用的快捷键"></a>模式下的常用的快捷键</h4><ul>
+<li><strong>Ctrl+Enter</strong>：运行本单元</li>
+<li><strong>Shift+Enter</strong>：运行本单元，选中下个单元</li>
+<li><strong>Y</strong>：转入代码状态</li>
+<li><strong>M</strong>：转入makedown状态</li>
+<li><strong>R</strong>：转入raw状态</li>
+<li><strong>A</strong>：在上方插入新的单元</li>
+<li><strong>B</strong>：在下方插入新的单元</li>
+<li><strong>DD</strong>：删除单元</li>
+<li><strong>Z</strong>：恢复操作</li>
+<li><strong>Shift+M</strong>：合并选中的单元</li>
+<li><strong>L</strong>：显示或隐藏行号</li>
+<li><strong>II</strong>：中断内核</li>
+<li><strong>00</strong>：重启内核</li>
+</ul>
+<h4 id="辑模式下的常用的快捷键"><a href="#辑模式下的常用的快捷键" class="headerlink" title="辑模式下的常用的快捷键"></a>辑模式下的常用的快捷键</h4><p>由于编辑模式下的快捷方式与其他编辑器类似，所以就不特地列出，这里只记录一个拆分单元的功能。</p>
+<ul>
+<li><strong>Ctrl+Shift+-</strong>：分割单元</li>
+</ul>
+<h2 id="激活和关闭交互式的matplotlib图标"><a href="#激活和关闭交互式的matplotlib图标" class="headerlink" title="激活和关闭交互式的matplotlib图标"></a>激活和关闭交互式的matplotlib图标</h2><p>在jupyter notebook中使用matplotlib画图，在普通情况下，只能输出图标格式化后静态的的图像，而没有交互的功能。如果我们需要交互功能需要在c<br>ell中执行如下命令：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib notebook</span><br></pre></td></tr></table></figure>
+<p>如果不再需要交互式的输出，则可以需要关闭它：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
+<h2 id="在cell中运行shell命令"><a href="#在cell中运行shell命令" class="headerlink" title="在cell中运行shell命令"></a>在cell中运行shell命令</h2><p>jupyter提供“！”作为unix command的前导符合，来运行shell命令，如：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">!python --version</span><br><span class="line">!ls</span><br></pre></td></tr></table></figure>
+<h2 id="为Jupyter-Notebook添加目录功能"><a href="#为Jupyter-Notebook添加目录功能" class="headerlink" title="为Jupyter Notebook添加目录功能"></a>为Jupyter Notebook添加目录功能</h2><h3 id="在jupyter中添加侧边栏目录"><a href="#在jupyter中添加侧边栏目录" class="headerlink" title="在jupyter中添加侧边栏目录"></a>在jupyter中添加侧边栏目录</h3><p>原始的Jupyter是不支持markdown添加目录功能的，不过我们可以可以利用Jupyter notebook<br>extensions去使得这种功能实现，首先安装jupyter_contrib_nbextensions：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge jupyter_contrib_nbextensions</span><br></pre></td></tr></table></figure>
+<p>当安装好以后就会发现jupyter上方的菜单中多出了一个Nbextensions的菜单如下图：</p>
+<p><img src="Image/Nbextensions.jpg" alt="Nbextensions"></p>
+<p>将Tabel of Contents勾选即可，而在Nbextension还有需要有趣的插件可以去探索。</p>
+<h3 id="在文本头增目录"><a href="#在文本头增目录" class="headerlink" title="在文本头增目录"></a>在文本头增目录</h3><p>上面是使用插件生成侧边栏目录，如果只需要在文章的头部生成目录则可以用另外的方法。在纯Markdown文本中是能够使用“[TOC]”来自动生成文章头部目录的，但是<br>在jupyter notebook的cell中无法使用，我们只能通过创建文本内部的链接，手动创建目录，如下所示：</p>
+<p><img src="Image/header.jpg" alt="目录链接"></p>
+<h2 id="修改jupyter的工作空间"><a href="#修改jupyter的工作空间" class="headerlink" title="修改jupyter的工作空间"></a>修改jupyter的工作空间</h2><p>修改工作空间有两种方法，一是在进入需要修改的目录中，然后在这个目录下打开jupyter，那么打开的jupyter<br>notebook就会将当前目录做工作空间；二是修改配置文件。</p>
+<p>第一种放简单灵活，是我们的首选，但是在Window下命令行启用jupyter，有时候修改工作空间是无效的，所以只能修改配置文件了。配置文件为：jupyter_n<br>otebook_config.py，如果不存在则需要手动创建，执行如下命令：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br></pre></td></tr></table></figure>
+<p>在jupyter_notebook_config.py文件中找到如下内容，并将c.NotebookApp.notebook_dir的值修改为需要指定的目录:</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># The directory to use for notebooks and kernels.</span><br><span class="line">c.NotebookApp.notebook_dir = u&apos;D:\Jupyter&apos;</span><br></pre></td></tr></table></figure>
+<h2 id="为jupyter添加内核"><a href="#为jupyter添加内核" class="headerlink" title="为jupyter添加内核"></a>为jupyter添加内核</h2><h4 id="添加新python内核"><a href="#添加新python内核" class="headerlink" title="添加新python内核"></a>添加新python内核</h4><p>以python为例，一般可能有两种情况需要增加内核，一是系统中同时安装了不同版本的python，如python2和python3，二是使用conda等工具创建的<br>不同的python运行环境，在这里我假定是第二种情况。</p>
+<p>首先需要安装ipykernel，注意是在要添加的环境中，如下我们先创建了一个虚拟环境，然后在其中安装ipykernel：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda create -n py36-test python=3.6</span><br><span class="line">source activate py36-test</span><br><span class="line">conda install ipykernel</span><br></pre></td></tr></table></figure>
+<p>然后执行如下命令，注意同样是需要在要添加的环境下，下面命令中的python指的就是你要添加的内核，–name是你指定jupyter中添加内核的名字：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m ipykernel install --name py36-test</span><br></pre></td></tr></table></figure>
+<p>安装好后就可以在jupyter notebook中Kernel菜单的Change Kernel中看到</p>
+<h4 id="查看和删除内核"><a href="#查看和删除内核" class="headerlink" title="查看和删除内核"></a>查看和删除内核</h4><p>查看内核：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec list</span><br></pre></td></tr></table></figure>
+<p>删除内核：</p>
+<figure class="highlight plain"><figcaption><span>.input&#125;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter kernelspec remove kernelname</span><br></pre></td></tr></table></figure>
 
         
         </div>
@@ -312,7 +319,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/08/13/图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作/" data-id="cjhd2peit003cgsvdy3pvkul4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjhd2pegj0001gsvdsavl36nv" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -387,19 +394,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2016/08/30/用Python-OpenCV进行图像梯度操作/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Newer</strong>
-            <div class="article-nav-title">
-                
-                    用Python+OpenCV进行图像梯度操作
-                
-            </div>
-        </a>
     
-    
-        <a href="/2016/08/12/用Python+OpenCV进行图像处理基本操作/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/05/19/一个简单数据管理python项目教程/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">Older</strong>
-            <div class="article-nav-title">用Python+OpenCV进行图像处理基本操作</div>
+            <div class="article-nav-title">一个简单数据管理python项目教程</div>
         </a>
     
 </nav>
