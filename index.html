@@ -251,7 +251,7 @@
         
             
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一年多以前，我在公司有段时间帮忙做过python的新手培训课程（当然是在下班后），虽然我根本就算不上python高手，但是面对对于编程一无所知的初学者我还是绰绰有余的。后面领导希望能做一个样品管理工具作为最终学习的验收成果，而这篇这文章就是我为当时项目提供一个新手教程。</p>
-<p>实际上整个项目的基本设计方案也是我提供的，在功能很简单的主要是对样品自身的信息整理分类、以及借入借出做一个管控和信息记录，不过项目有一些强制的要求：</p>
+<p>实际上整个项目的基本设计方案也是我提供的，其功能很简单，主要是对样品自身的信息整理分类、以及样品的借入借出做一个管控和信息记录，不过项目有一些强制的要求：</p>
 <ol>
 <li>需要用python编写</li>
 <li>需要有窗口图形界面</li>
@@ -263,10 +263,10 @@
 <li>PyQt的使用</li>
 <li>MySQL connector的使用</li>
 </ol>
-<p>以下就是我当时文章内容了。</p>
+<p>以下就是我当时文章内容了（提到的书是指：《Python语言及其应用(美Lubanovic 2016)》）。</p>
 <h2 id="1-Python基础知识"><a href="#1-Python基础知识" class="headerlink" title="1. Python基础知识"></a>1. Python基础知识</h2><h3 id="1-1-模块的导入"><a href="#1-1-模块的导入" class="headerlink" title="1.1 模块的导入"></a>1.1 模块的导入</h3><p>在python的程序中，要使用第三方模块的功能，都需要先导入该模块。关于import的部分详细说明，查看书96页。这里只提示一些注意点：</p>
 <ol>
-<li>使用自己写其他python文件中的函数，也要先导入</li>
+<li>使用自己写的其他python文件中的函数，也要先导入</li>
 <li>导入的模块只有放在本目录与python环境中的默认目录，才能导入</li>
 <li>如果需要导入其他目录的模块，可以用sys.path.append()，将这个模块的路径添加到查找路径中，就可以导入了。</li>
 </ol>
@@ -274,22 +274,19 @@
 <ul>
 <li>类用class定义，它其中的每一个成员函数和每一个成员变量都需要在其参数中加self，当使用这些函数时也需要使用self.的形式来调用：</li>
 <li>类的成员变量的作用域存在于整个类，使用self.的形式可以在各个成员函数中使用</li>
-<li><ul>
 <li>类中的__init__函数是类的默认初始化函数（构造函数），在类的对象被创建时自动调用，因此一些类初始操作都放在这个函数中：</li>
 </ul>
-</li>
-</ul>
-<h3 id="1-3-用函数返回多个值"><a href="#1-3-用函数返回多个值" class="headerlink" title="1.3 用函数返回多个值"></a>1.3 用函数返回多个值</h3><p>在python中，函数是可以返回多个值的，当函数返回多个值时，实际上时返回的一个元组;当接收时除了用一个参数接收外，还可以用多个参数接收：</p>
+<h3 id="1-3-用函数返回多个值"><a href="#1-3-用函数返回多个值" class="headerlink" title="1.3 用函数返回多个值"></a>1.3 用函数返回多个值</h3><p>在python中，函数是可以返回多个值的，当函数返回多个值时，实际上时返回的一个元组，当接收这样的返回值时除了用一个参数接收外，还可以用多个参数接收：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testFuntion</span><span class="params">()</span>:</span></span><br><span class="line">    ret1 = <span class="string">"return data"</span></span><br><span class="line">    ret2 = <span class="number">23</span></span><br><span class="line">    ret3 = [<span class="number">23</span>,<span class="number">65</span>,<span class="number">90</span>]</span><br><span class="line">    <span class="keyword">return</span> ret1, ret2, ret3</span><br><span class="line"></span><br><span class="line">res = testFuntion()</span><br><span class="line">data1,data2,data3 = testFuntion()</span><br></pre></td></tr></table></figure>
-<h3 id="1-4-Python中的线程操作"><a href="#1-4-Python中的线程操作" class="headerlink" title="1.4 Python中的线程操作"></a>1.4 Python中的线程操作</h3><p>在项目中，连接数据库可能需要很长的时间，单线程的操作肯能导致程序卡住很长时间无法响应。在这样情况下，我们一般会新创建一个线程，在线程中执行数据库连接的操作。</p>
+<h3 id="1-4-Python中的线程操作"><a href="#1-4-Python中的线程操作" class="headerlink" title="1.4 Python中的线程操作"></a>1.4 Python中的线程操作</h3><p>在项目中，连接数据库可能需要很长的时间，单线程的操作很可能导致程序卡住很长时间无法响应。在这样情况下，我们一般会新创建一个线程，在线程中执行数据库连接的操作。</p>
 <p>在Python中创建线程的最基本操作可以固定如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入线程模块</span></span><br><span class="line"><span class="keyword">from</span> threading <span class="keyword">import</span> Thread</span><br><span class="line"></span><br><span class="line"><span class="comment"># 线程开始时执行的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">connectThread</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'conneting'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建线程</span></span><br><span class="line">th = Thread(target=connectThread)</span><br><span class="line">th.setDaemon(<span class="keyword">True</span>)</span><br><span class="line">th.start()</span><br></pre></td></tr></table></figure>
 <h2 id="2-PyQt的使用"><a href="#2-PyQt的使用" class="headerlink" title="2. PyQt的使用"></a>2. PyQt的使用</h2><h3 id="2-1-PyQt简介"><a href="#2-1-PyQt简介" class="headerlink" title="2.1 PyQt简介"></a>2.1 PyQt简介</h3><p>PyQt是Qt的Python版本，一般在Python发布版本（WinPython和Anaconda）中都会有带有，官方原生的Python则需要自己安装。原生的Qt是C++版的，当前主流Qt使用的是两个版本：Qt4和Qt5，对应Python的版本为PyQt4和PyQt5，在我们的项目中使用PyQt5。</p>
 <p>使用Qt设计界面有一个很好用的工具，那就是<strong>Qt Designer</strong>。它提供可视化的界面设计环境，让能够让开发者更快速、简单的设计和布局界面。</p>
-<h3 id="2-2-PyQt使用基本步骤"><a href="#2-2-PyQt使用基本步骤" class="headerlink" title="2.2 PyQt使用基本步骤"></a>2.2 PyQt使用基本步骤</h3><p>下面，我将使用PyQt生成一个最简单的窗口，通过以下代码我们可以看到，仅仅需要五个简单的步骤就可以完成。这五个步骤可以看成使用PyQt的一个固定的模式，要创建其他更复制的窗口，只是在此基础上稍作修改然后增加新窗口的部分代码而已。</p>
+<h3 id="2-2-PyQt使用基本步骤"><a href="#2-2-PyQt使用基本步骤" class="headerlink" title="2.2 PyQt使用基本步骤"></a>2.2 PyQt使用基本步骤</h3><p>下面，我将使用PyQt生成一个最简单的窗口，通过以下代码我们可以看到，仅仅需要五个简单的步骤就可以完成。这五个步骤可以看成使用PyQt的一个固定的模式，要创建其他更复杂的窗口时，只是在此基础上稍作修改然后增加新窗口的部分代码而已。</p>
 <p><em>注：在jupyter环境下，直接运行以下代码，就可以得到一个新的窗口</em></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一步，导入PyQt5或者它的子库</span></span><br><span class="line"><span class="keyword">from</span> PyQt5.QtWidgets <span class="keyword">import</span> QApplication, QMainWindow</span><br><span class="line"><span class="comment"># 第二步，创建一个Qt应用程序</span></span><br><span class="line">app = QApplication(sys.argv)</span><br><span class="line"><span class="comment"># 第三步，创建一个QMainWindow窗口</span></span><br><span class="line">mwind = QMainWindow()</span><br><span class="line"><span class="comment"># 第四步，显示创建的窗口</span></span><br><span class="line">mwind.show()</span><br><span class="line"><span class="comment"># 第五步，开启消息循环</span></span><br><span class="line">app.exec()</span><br></pre></td></tr></table></figure>
-<h3 id="2-3-使用Qt-Designer设计界面"><a href="#2-3-使用Qt-Designer设计界面" class="headerlink" title="2.3 使用Qt Designer设计界面"></a>2.3 使用Qt Designer设计界面</h3><p>前面说过，Qt Designer是Qt提供的一个可视化界面设计工具，使用Qt Designer不管是布局窗口或者控件的大小和位置，还是增加或者删除控件，都只需要简单拖动鼠标即可。</p>
+<h3 id="2-3-使用Qt-Designer设计界面"><a href="#2-3-使用Qt-Designer设计界面" class="headerlink" title="2.3 使用Qt Designer设计界面"></a>2.3 使用Qt Designer设计界面</h3><p>前面说过，Qt Designer是Qt提供的一个可视化界面设计工具，使用Qt Designer不管是布局窗口或者调整控件的大小和位置，还是增加或者删除控件，都只需要简单拖动鼠标即可。</p>
 <p>Qt Designer设计的界面保存的文件，是一个XML格式后缀名以.ui结尾的文件，设计时使用到的资源（如图片）将保存为以.qrc为后缀的资源文件。当我们的代码要使用这些窗口时，需要使用Qt给定的工具将ui文件和资源转化Python代码能够使用的.py文件：</p>
 <ul>
 <li><strong>pyuic5.bat</strong>：将.ui文件转化为.py文件</li>
@@ -299,12 +296,12 @@
 <p>ui文件的转化（假定ui文件名为MainWindow.ui）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyuic5.bat -o Ui_MainWindow.py MainWindow.ui</span><br></pre></td></tr></table></figure></p>
 <p>资源文件的转化（假定pyrcc5.exe的路径如下,资源文件名为res.qrc）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\WinPython\python-3.4.4\Lib\site-packages\PyQt5\pyrcc5.exe -o res.py res.qrc</span><br></pre></td></tr></table></figure></p>
 <p>当然，你可以将这些转化命令写到python代码或者bat脚本中，然后一下执行一系列的转化。另外对于PyCharm的使用者，可以使用PyCharm封装了这两个命令的菜单来执行。</p>
-<h3 id="2-4-使用自己设计的窗口"><a href="#2-4-使用自己设计的窗口" class="headerlink" title="2.4 使用自己设计的窗口"></a>2.4 使用自己设计的窗口</h3><p>在3.2中生成的窗口只是Qt中默认的窗口，在实际项目中我们肯定是需要使用自己设计的窗口的，我们只需要做两步修改即可：</p>
+<h3 id="2-4-使用自己设计的窗口"><a href="#2-4-使用自己设计的窗口" class="headerlink" title="2.4 使用自己设计的窗口"></a>2.4 使用自己设计的窗口</h3><p>在2.2中生成的窗口只是Qt中默认的窗口，在实际项目中我们肯定是需要使用自己设计的窗口的，我们只需要做两步修改即可：</p>
 <ol>
 <li>创建一个新的窗口类（它同时继承于Qt的默认窗口和我们自己的设计的窗口），</li>
-<li>将3.2中的代码，创建的窗口改为自己新建的窗口类</li>
+<li>将2.2中的代码，创建的窗口改为自己新建的窗口类</li>
 </ol>
-<p>假定我们从3.3节转化得到的窗口文件为Ui_MainWindow.py，则我们需要增加的代码如下：</p>
+<p>假定我们从2.3节转化得到的窗口文件为Ui_MainWindow.py，则我们需要增加的代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新建自己的窗口类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyUi</span><span class="params">(QMainWindow, Ui_MainWindow)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(MyUi, self).__init__()</span><br><span class="line">        self.setupUi(self)</span><br></pre></td></tr></table></figure>
 <p>将mwind = QMainWindow()改为如下代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mwind = MyUi()</span><br></pre></td></tr></table></figure>
@@ -325,15 +322,15 @@
 <li>控件的方法：每种控件都有自己不同的作用，他们的拥有的方法也可能不一样，这个需要在Qt的官方文档中查询（如QLineEdit的页面为： <a href="http://doc.qt.io/qt-5/qlineedit.html" target="_blank" rel="noopener">http://doc.qt.io/qt-5/qlineedit.html</a>）</li>
 <li>控件的消息：控件在发生改变时可能会产生消息，控件拥有消息的类型需要在官方文档对应的页面的“Singals部分”查询</li>
 </ol>
-<p>那么具体怎么在代码中使用这些控件呢？仍然以3.4中的例子为例，为获取QLineEdit的文字并改变其中的值，你需要在MyUi类中合适的地方加入：</p>
+<p>那么具体怎么在代码中使用这些控件呢？仍然以2.4中的例子为例，为获取QLineEdit的文字并改变其中的值，你需要在MyUi类中合适的地方加入：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取名为lineEdit的QLineEdit控件的输入的文字</span></span><br><span class="line">textStr = self.text()</span><br><span class="line"><span class="comment"># 设置lineEdit的文字，为在原有输入信息的前面加上“你输入了：”</span></span><br><span class="line">self.setText(<span class="string">"你输入了："</span>+textStr)</span><br></pre></td></tr></table></figure>
 <p><strong>注意：尽管每个控件的很多都不一样，但是也有一些方法是一样的，如上面所示的text()和setText()函数，很多控件或缺它的文字和设置它的文字的方法都是这两个函数</strong></p>
 <p>那么又怎么让控件的信号关联到自己的消息处理函数上呢？以名为button的QPushButton为例，要处理它的用户点击消息，要在MyUi类中加入代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OnLoginBtnClicked2是MyUi类中自己写的消息处理函数，clicked就是QPushButton控件中的一种信号，用connect可以将新号和处理函数关联起来</span></span><br><span class="line">self.button.clicked.connect(self.OnLoginBtnClicked2)</span><br></pre></td></tr></table></figure>
 <h2 id="3-Python中MySQL-connector的使用"><a href="#3-Python中MySQL-connector的使用" class="headerlink" title="3. Python中MySQL connector的使用"></a>3. Python中MySQL connector的使用</h2><h3 id="3-1-MySQL-connector简介"><a href="#3-1-MySQL-connector简介" class="headerlink" title="3.1 MySQL connector简介"></a>3.1 MySQL connector简介</h3><p>在Python访问MySQL数据库需要用它的第三方库，在我们的项目中用的是mysql connector，利用它能够比较简单的实现MySQL数据库操作。一般在Python的发布版本中都自带mysql connector，官方原生的Python需要自己安装。</p>
-<h3 id="3-2-MySQL-connector使用的基本流程"><a href="#3-2-MySQL-connector使用的基本流程" class="headerlink" title="3.2 MySQL connector使用的基本流程"></a>3.2 MySQL connector使用的基本流程</h3><p>以下是mysql connector使用的基本流程（我的数据库服务器地址：127.0.0.1，用户：testuser，密码：123456，数据库：test，端口：3306）：</p>
+<h3 id="3-2-MySQL-connector使用的基本流程"><a href="#3-2-MySQL-connector使用的基本流程" class="headerlink" title="3.2 MySQL connector使用的基本流程"></a>3.2 MySQL connector使用的基本流程</h3><p>以下是mysql connector使用的基本流程（测试我的本地数据库服务器，地址：127.0.0.1，用户：testuser，密码：123456，数据库：test，端口：3306）：</p>
 <p><em>注：在jupyton环境下，可以直接执行，不过需要将数据库服务器的参数设置为自己实际情况的</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># 第一步，导入mysql.connector</span><br><span class="line">import mysql.connector</span><br><span class="line"></span><br><span class="line"># 第二步，连接数据库</span><br><span class="line">db_server = &apos;127.0.0.1&apos;</span><br><span class="line">db_user = &apos;testuser&apos;</span><br><span class="line">db_pw = &apos;123456&apos;</span><br><span class="line">db_port = &apos;3306&apos;</span><br><span class="line">db_database = &apos;test&apos;</span><br><span class="line">cnx = mysql.connector.connect(user=db_user, password=db_pw, host=db_server, database=db_database,port=db_port)</span><br><span class="line"></span><br><span class="line"># 第三步, 获取cursor</span><br><span class="line">cur = cnx.cursor()</span><br><span class="line"></span><br><span class="line"># 第四步, 执行sql语句</span><br><span class="line">cur.execute(&quot;show databases&quot;)</span><br><span class="line"></span><br><span class="line"># 第五步，获取执行的结果</span><br><span class="line">ret = cur.fetchall()</span><br><span class="line"></span><br><span class="line"># 第六步， 关闭连接</span><br><span class="line">cur.close()</span><br><span class="line">cnx.close()</span><br><span class="line"></span><br><span class="line">print(&quot;数据库服务器有库：&quot;,ret)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一步，导入mysql.connector</span></span><br><span class="line"><span class="keyword">import</span> mysql.connector</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二步，连接数据库</span></span><br><span class="line">db_server = <span class="string">'127.0.0.1'</span></span><br><span class="line">db_user = <span class="string">'testuser'</span></span><br><span class="line">db_pw = <span class="string">'123456'</span></span><br><span class="line">db_port = <span class="string">'3306'</span></span><br><span class="line">db_database = <span class="string">'test'</span></span><br><span class="line">cnx = mysql.connector.connect(user=db_user, password=db_pw, host=db_server, database=db_database,port=db_port)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第三步, 获取cursor</span></span><br><span class="line">cur = cnx.cursor()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第四步, 执行sql语句</span></span><br><span class="line">cur.execute(<span class="string">"show databases"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第五步，获取执行的结果</span></span><br><span class="line">ret = cur.fetchall()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第六步， 关闭连接</span></span><br><span class="line">cur.close()</span><br><span class="line">cnx.close()</span><br><span class="line"></span><br><span class="line">print(<span class="string">"数据库服务器有库："</span>,ret)</span><br></pre></td></tr></table></figure>
 <p>从上面，我们可以看到利用mysql connector操作数据库服务器的基本流程为6步，我们可以认为上面操作是所有操作的基础。其中第二步、第三步在可以认为是数据库的连接部分，在使用数据库前一定要先连接成功。第六步是关闭数据库连接的操作，在所有数据库操作完成后执行。第四步和第五步是实际数据库操作部分，在数据库连接成功后并且在没有关闭前，可以一直执行。</p>
 <p>我们对数据的操作实际上都是用sql语句去做的，而上面代码的第四步就时执行sql语句，我们只要改变execute函数中的sql语句字符串就可以将它变成执行其他功能的操作。</p>
 <h3 id="3-3-MySQL-connector执行sql语句的两种类型"><a href="#3-3-MySQL-connector执行sql语句的两种类型" class="headerlink" title="3.3 MySQL connector执行sql语句的两种类型"></a>3.3 MySQL connector执行sql语句的两种类型</h3><p>使用mysql connnector执行数库语句有两种类型：</p>
@@ -341,7 +338,7 @@
 <li>对数据库进行查询，需要返回数据</li>
 <li>对数据库进行修改，不需要返回数据的</li>
 </ol>
-<p>这两种类型，在使用mysql connector时会有稍许的差异，对应4.2中的代码中，不同的部分在第五个步骤，其他部分都一样。</p>
+<p>这两种类型，在使用mysql connector时会有稍许的差异，对应3.2中的代码中，不同的部分在第五个步骤，其他部分都一样。</p>
 <p>对于第一种类型，使用fetch系列函数来获取数据：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret = cur.fetchall()</span><br></pre></td></tr></table></figure></p>
 <p>对于第二种类型，使用commit来提交修改：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnx.commit()</span><br></pre></td></tr></table></figure></p>
 <h3 id="3-4-额外的sql语句知识"><a href="#3-4-额外的sql语句知识" class="headerlink" title="3.4 额外的sql语句知识"></a>3.4 额外的sql语句知识</h3><h4 id="3-4-1-条件查询"><a href="#3-4-1-条件查询" class="headerlink" title="3.4.1 条件查询"></a>3.4.1 条件查询</h4><p>使用where，可以根据条件查询得到对应的数据，如：查询用户名为“李四”的人的密码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select password from usertable where username = &quot;李四&quot;</span><br></pre></td></tr></table></figure></p>
@@ -362,7 +359,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/19/一个简单数据管理python项目教程/" data-id="cjhcxdt03001t6wvd4d0lq6fe" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/19/一个简单数据管理python项目教程/" data-id="cjhcz8tzx001tl0vd2715ry4f" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -545,7 +542,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/05/cython介绍/" data-id="cjhcxdszn00116wvdluor8fr5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/05/cython介绍/" data-id="cjhcz8tzj0011l0vdopkwazif" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -703,7 +700,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/16/B站新番信息爬虫设计/" data-id="cjhcxdsyg00006wvdxtwgnfay" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/03/16/B站新番信息爬虫设计/" data-id="cjhcz8tya0000l0vdwr6j7v4a" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -872,7 +869,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/01/17/搜索算法整理/" data-id="cjhcxdt10003q6wvdzvvfd48v" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/01/17/搜索算法整理/" data-id="cjhcz8u130043l0vdxsxq4nu5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1107,7 +1104,7 @@ t=\lambda K^{-1}h_3
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/01/05/双目视觉标定2——张氏标定法/" data-id="cjhcxdt0m002w6wvdkmhu9nhj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/01/05/双目视觉标定2——张氏标定法/" data-id="cjhcz8u0b002kl0vd2fjbq7of" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1292,7 +1289,7 @@ T = T_r - RT_l "></p>
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/12/20/双目视觉标定1——原理/" data-id="cjhcxdt0g002k6wvdjzjiadl1" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/12/20/双目视觉标定1——原理/" data-id="cjhcz8u0e002ql0vdxomnok83" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1462,7 +1459,7 @@ T = T_r - RT_l "></p>
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/12/12/深度学习实践/" data-id="cjhcxdt1600466wvd4rbgts4q" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/12/12/深度学习实践/" data-id="cjhcz8u15004bl0vdkhavujs8" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1614,7 +1611,7 @@ T = T_r - RT_l "></p>
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/12/10/初识DeepLearning/" data-id="cjhcxdt0e002g6wvdxc0a6rxa" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/12/10/初识DeepLearning/" data-id="cjhcz8u0d002ol0vdbmfy1glx" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1793,7 +1790,7 @@ T = T_r - RT_l "></p>
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/11/25/python深度度学习库mxnet开发环境的搭建/" data-id="cjhcxdszw001g6wvdq50o5c49" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/11/25/python深度度学习库mxnet开发环境的搭建/" data-id="cjhcz8tzv001pl0vdkem80359" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1939,7 +1936,7 @@ T = T_r - RT_l "></p>
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/11/23/10月学习小结/" data-id="cjhcxdsyt00046wvdh29ghhad" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/11/23/10月学习小结/" data-id="cjhcz8tyn0004l0vdgqw95dn5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
