@@ -77,7 +77,7 @@
             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Rechercher" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
@@ -96,9 +96,9 @@
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Posts',
+            POSTS: 'Articles',
             PAGES: 'Pages',
-            CATEGORIES: 'Categories',
+            CATEGORIES: 'Catégories',
             TAGS: 'Tags',
             UNTITLED: '(Untitled)',
         },
@@ -130,7 +130,7 @@
                 <td>
                     
     <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Rechercher" />
     </div>
 
                 </td>
@@ -150,16 +150,16 @@
             <h2 id="name">Harry Mei</h2>
             <h3 id="title">coder</h3>
             <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
-            <a id="follow" target="_blank" href="https://github.com/HarryMei/">FOLLOW</a>
+            <a id="follow" target="_blank" href="https://github.com/HarryMei/">SUIVRE</a>
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                65
-                <span>posts</span>
+                67
+                <span>Articles</span>
             </div>
             <div class="article-info-block">
-                83
-                <span>tags</span>
+                87
+                <span>Tags</span>
             </div>
         </div>
         
@@ -207,6 +207,334 @@
 
             
             <section id="main">
+    <article id="post-一个纯C软件工程的设计" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/06/09/一个纯C软件工程的设计/">一个纯C软件工程的设计</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/06/09/一个纯C软件工程的设计/">
+            <time datetime="2017-06-09T13:25:16.000Z" itemprop="datePublished">2017-06-09</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/嵌入式/">嵌入式</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/c/">c</a>, <a class="tag-link" href="/tags/软件设计/">软件设计</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>说起来C语言是我的编程入门语言，但是自从工作后我就慢慢的开始从C开始转到C++，很少使用到C，而在最近半年由于工作的需要，C++也写得少了，Python成为了我的主要使用语言。伴随着这些新语言的使用，它们优秀语言特性和程序设计模式让我受益匪浅，因此现在当我再一次回到纯C开发时，我也希望能够借用上一些设计方法和思路，让C写出来的代码模块的独立性更好，通用性更强。</p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>软件需要实现的目标很简单，功能就是接受外部通信发过来的数据包，将数据包解析为已经定义好的指令，然后按照指令协议控制硬件完成指定的操作，软件工作在一个运行着Linux操作系统的嵌入式设备上。</p>
+<p>由于软件是运行在嵌入式设备中（不过硬件性能不错），需要和专用的硬件模块进行交互且不需要界面，又是在Linux平台之上的，同时也希望尽可能的保持高效，所以我首先想到的语言是C了。为什么不用C++？也许是惯性吧，感觉在Linux平台之上写不需要UI的底层应用用C++会比较奇怪。</p>
+<h3 id="设计方案"><a href="#设计方案" class="headerlink" title="设计方案"></a>设计方案</h3><p>分析设计需求，其实当前软件需要需要完成的功能是非常简单的。我将整个软件划分4个模块：</p>
+<ul>
+<li>通信数据接收模块</li>
+<li>指令解析模块</li>
+<li>指令调度</li>
+<li>硬件操作模块</li>
+</ul>
+<p>以下为上面四个模块做详细的解释。</p>
+<h5 id="1-通信数据接收模块"><a href="#1-通信数据接收模块" class="headerlink" title="1. 通信数据接收模块"></a>1. 通信数据接收模块</h5><p>这部分的主要作用打通过外界与本机的物理通信链路，接收外部传来的数据，这部分相对独立，不管是本机与外部通信是使用哪种方式，它的都只要将传递的有效的数据信息部分传递给命令解析模块即可。</p>
+<p>但是我们唯一需要限定的是，不管使用什么样的通信方式，不管使用怎样的协议传输数据，需要保证有效数据的数据格式一致。</p>
+<h5 id="2-指令解析模块"><a href="#2-指令解析模块" class="headerlink" title="2. 指令解析模块"></a>2. 指令解析模块</h5><p>由于数据接收模块可以提供一致的数据，所以指令解析模块就只需要参照这种固定的格式，将数据流变成结构化的数据，存放在相应的结构体中。</p>
+<h5 id="3-指令调度模块"><a href="#3-指令调度模块" class="headerlink" title="3. 指令调度模块"></a>3. 指令调度模块</h5><p>这相当于一个流程控制的模块，接收解析出的指令作为输入，对应按照指定的调度规范，调整指令执行的流程、顺序、或参数等操作，让后调用硬件操作模块来执行指令。</p>
+<h5 id="4-硬件操作模块"><a href="#4-硬件操作模块" class="headerlink" title="4. 硬件操作模块"></a>4. 硬件操作模块</h5><p>硬件操作模块主要的作用的作用就是，对外提供实现对硬件设备控制的接口。从功能上来看，它的独立性是更强的。对于较低的层次接口来说，只需要提供通用硬件寄存器的读写操作，对于较高层次的接口来说，可以各个硬件单项功能的寄存器操作步骤集合做封装。</p>
+<h3 id="指令的结构设计"><a href="#指令的结构设计" class="headerlink" title="指令的结构设计"></a>指令的结构设计</h3><p>虽然说在设计各个模块尽可能相互独立，但是有些因素基本上对所有模块都有影响，这些因素我们应该尽量确定细节，以由于这些因素的改变对整个程序的影响。在这个工程中指令功能规范设计就是其中之一，所以我们在编写所有模块之前，首先就需要确定功能规范，围绕着此规范在去写各个模块中的逻辑实现。</p>
+<p>为此我构造了一个专门处理指令规范的结构体，这个结构体是全局的，它为所有模块共用。它由以下几个部分组成：</p>
+<ul>
+<li>指令ID(int)</li>
+<li>指令名称(char *)</li>
+<li>指令参数解析函数(函数指针)</li>
+<li>指令执行函数(函数指针)</li>
+</ul>
+<p>以下对结构中的每个部分进行说明：</p>
+<h5 id="1-指令ID"><a href="#1-指令ID" class="headerlink" title="1. 指令ID"></a>1. 指令ID</h5><p>指令都都是唯一的，我们使用ID标示这个指令，数值类型为整形。为了方便标示，我们用一个枚举型变量来代替宏来定义每个指令的ID值，利用枚举型变量内部元素常量特性，同时默认定义时，后一个定义的元素值为前一个元素值加1的特点，保证每一个指令ID值唯一，另外在所有指令定义完成后，在最后增加一个枚举元素来记录总的指令数量。</p>
+<p>在当前的设计中，一旦结构体初始化，其指令ID期望是固定的，所以可以将其设置为const属性。</p>
+<h5 id="2-指令名称"><a href="#2-指令名称" class="headerlink" title="2. 指令名称"></a>2. 指令名称</h5><p>指令名称用来存储一个字符串，数据类型是一个字符串指针，虽然这并不是必须的，但是字符串的描叙对指令是个很好的说明。同样当ID确定时，名称也不应该改变，所以需要将其设置为const属性。</p>
+<h5 id="3-指令参数解析函数"><a href="#3-指令参数解析函数" class="headerlink" title="3. 指令参数解析函数"></a>3. 指令参数解析函数</h5><p>不同的指令所需要的参数可能不一样，有些指令设置可以不需要参数，所以将将当前指令的解析函数用函数指针保存起来，好处是：1. 不同指令直接对应各自独立的解析方法，不需混在一起要很多个if判断 2. 即使解析方法发生了变化，只要将函数指针重新设置为新的解析函数即可。不过，一般情况下相同指令的解析函数不会动态变化。</p>
+<h5 id="4-指令执行函数"><a href="#4-指令执行函数" class="headerlink" title="4. 指令执行函数"></a>4. 指令执行函数</h5><p>指令执行函数是只将指令规定的功能，通过硬件操作模块的接口，对硬件进行配置，让其完成对应工作。和指令前面类似，这里保存的也是一个函数指针。</p>
+<h3 id="指令数据的结构设计"><a href="#指令数据的结构设计" class="headerlink" title="指令数据的结构设计"></a>指令数据的结构设计</h3><p>前面所提到的指令解析函数，它的输入是无格式的数据流，它的输出是有意义的结构化的数据。于是，那我们就必须先完成这个数据的结构的设计。</p>
+<p>设计思路有两种：1. 对每个不同的指令设计一个存放数据的结构体，2. 综合所有指令所带的数据，统一记录在一个结构体中。考虑到在后面指令调度模块可能会需要缓冲指令和数据，所以这样来看第二方法更加简单合适。</p>
+<p>指令数据的结构设计如下：</p>
+<ul>
+<li>执行序号(int)</li>
+<li>指令ID(int)</li>
+<li>所有指令的数据元素(void *)</li>
+<li>其他数据</li>
+</ul>
+<p>以下一一说明：</p>
+<h5 id="1-执行序号"><a href="#1-执行序号" class="headerlink" title="1. 执行序号"></a>1. 执行序号</h5><p>序号标示，当前指令在整个控制系统中的唯一编号，序号由外部控制中心产生，通过通信传递过来。</p>
+<p>执行序号在反馈应答的应用中有很重要的作用，由于有缓存的存在，当前执行的指令可能路后于是很早前的控制中心发送过来的指令，当指令接收和指令完成后，都发送应答给控制中心，那通过执行序号就可以很好的区分它们。</p>
+<h5 id="2-指令ID"><a href="#2-指令ID" class="headerlink" title="2. 指令ID"></a>2. 指令ID</h5><p>与指令结构体中的指令ID一样</p>
+<h5 id="3-所有指令的数据元素"><a href="#3-所有指令的数据元素" class="headerlink" title="3. 所有指令的数据元素"></a>3. 所有指令的数据元素</h5><p>由于我们采用了，用一个结构记录所有指令的数据，那么之一部分实际上是包含了一系列数据元素的。这样做是我们在缓存指令和数据后，回溯缓存的指令和数据时更方便。</p>
+<h5 id="4-其他数据"><a href="#4-其他数据" class="headerlink" title="4. 其他数据"></a>4. 其他数据</h5><p>其他数据是为那些可能需要传输大量数据的指令而设计的，一般不需要。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2017/06/09/一个纯C软件工程的设计/" data-id="cjhn48coa0027wgvd85en6yfm" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-Linux驱动开发小结" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/06/09/Linux驱动开发小结/">Linux驱动开发小结</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/06/09/Linux驱动开发小结/">
+            <time datetime="2017-06-09T13:10:52.000Z" itemprop="datePublished">2017-06-09</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/嵌入式/">嵌入式</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Linux/">Linux</a>, <a class="tag-link" href="/tags/嵌入式/">嵌入式</a>, <a class="tag-link" href="/tags/驱动开发/">驱动开发</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>对于Linux驱动我已经是太久没有弄，已经生疏得不行了，而我当前的硬件上Linux应用项目又不可能不涉及到驱动部分，没办法只能靠自己到处查找资料，把以前忘掉的知识点补一点回来。</p>
+<p>个人觉得通过这几天学习还是有一定的收获的，不过我还是得感谢以前在学校做过这样的东西，正应为有以前的了解，所以才让我在现在学习的过程中能够更快速全面的看清Linux驱动的流程，能够更加容易的理解哪些拗口概念。</p>
+<p>这篇文章算是我这几天的一个小结，只是简单的介绍比较零散的Linux驱动开发的一些基础要点与理论，因为一两天的时间根本就不可能能够深入Linux驱动开发的细节。</p>
+<h3 id="Linux驱动开发模式"><a href="#Linux驱动开发模式" class="headerlink" title="Linux驱动开发模式"></a>Linux驱动开发模式</h3><p>linux驱动加载有两种：一种是直接集成到内核中的，它时随内核的启动而加载；另一种是动态加载，在系统运行后，使用insmod等命令来加载。</p>
+<p>相对的驱动开发也可以分两种，一种直接编译到内核中，另一种以模块形式编译，完成后将生成的驱动模块文件动态的加载到系统。显然后一种方法是更是和开发阶段使用，前一种更适合完成开发后release。</p>
+<h3 id="Linux驱动类型"><a href="#Linux驱动类型" class="headerlink" title="Linux驱动类型"></a>Linux驱动类型</h3><p>Linux下驱动开发一般设备归为三类：字符设备、块设备、网络设备</p>
+<h5 id="1-字符设备"><a href="#1-字符设备" class="headerlink" title="1. 字符设备"></a>1. 字符设备</h5><p>所有能够像字节流一样访问的设备都可以认为字符设备，字符设备是必须串行顺序依次访问的，字符设备被映射为文件系统中的设备节点，通常在/dev/目录下，一般通过open、read、write等函数操作设备节点来控制。</p>
+<h5 id="2-块设备"><a href="#2-块设备" class="headerlink" title="2. 块设备"></a>2. 块设备</h5><p>一般是指磁盘、内存、Flash等存储设备，它们不仅能像字符设备那样以字节流的方式访问，也可一次传输任意多的字节。</p>
+<h5 id="3-网络设备"><a href="#3-网络设备" class="headerlink" title="3. 网络设备"></a>3. 网络设备</h5><p>相对前两个算是特殊的设备，通过socket来操作。</p>
+<h3 id="设备号"><a href="#设备号" class="headerlink" title="设备号"></a>设备号</h3><p>设备号主要用来标示设备，由两部分组成：</p>
+<ul>
+<li>主设备号：一般主设备号表示与同属一类的设备，可以共用同一驱动。</li>
+<li>次设备号：当有多个设备属于同一类设备时，用次设备号区分</li>
+</ul>
+<p>通过宏：MKDEV(int major, int minor)，可以将主设备号和次设备号组合成一个设备号。</p>
+<h3 id="Linux设备驱动开发的基本流程（字符设备为例）"><a href="#Linux设备驱动开发的基本流程（字符设备为例）" class="headerlink" title="Linux设备驱动开发的基本流程（字符设备为例）"></a>Linux设备驱动开发的基本流程（字符设备为例）</h3><h5 id="1-找到内核源码"><a href="#1-找到内核源码" class="headerlink" title="1. 找到内核源码"></a>1. 找到内核源码</h5><p>驱动程序是依赖于你的内核的，所以想面对哪个系统开发驱动，需要先找到它对应版本的源码。一般Linux系统都有将自己的内核源码保存到相应的目录。我们可以通过查看 /lib/modules目录下的内核版本信息，选择对应的版本，使用ll命令查看所选版本内核的原始路径在哪。</p>
+<h5 id="2-编写Makefile"><a href="#2-编写Makefile" class="headerlink" title="2. 编写Makefile"></a>2. 编写Makefile</h5><p>我们自己写的驱动源码不用再内核源码目录下，而可以放在我们自己指定的任意目录中，但是需要设置内核源码根目录的路径，同样也需要设置编译器，这些都可以在Makefile中设置。Makefile的写法一般都是固定格式的，可以参照别人驱动工程来写。</p>
+<h5 id="3-编写驱动源码文件"><a href="#3-编写驱动源码文件" class="headerlink" title="3. 编写驱动源码文件"></a>3. 编写驱动源码文件</h5><p>驱动代码与一般的应用程序相比没有main函数，驱动模块的入口是设置被为<strong>“module_init”</strong>的函数。另外打印输出也不用printf，而使用<strong>“printk”</strong>函数，而printk函数对显示消息的重要性做了等级划分的，可以根据实际情况，设置不同的等级参数。</p>
+<h5 id="4-创建设备节点"><a href="#4-创建设备节点" class="headerlink" title="4. 创建设备节点"></a>4. 创建设备节点</h5><p>设备节点是我们Linux上层应用通过驱动操作硬件的接口，我们可以在通过通过命令手动创建，也可以在驱动中就自动创建出来。</p>
+<h5 id="5-实现file-operation结构"><a href="#5-实现file-operation结构" class="headerlink" title="5. 实现file_operation结构"></a>5. 实现file_operation结构</h5><p><strong>“file_operation”</strong>是驱动程序中十分重要的结构，这个结构记录了我们在应用中操作设备所使用的open、read、write等API的对应的实际实现函数。file_operation不需要讲其成员全部都配置好，只需要配置我们驱动需要用的，不用的部分会自动赋值为NULL。</p>
+<h5 id="6-编译加载"><a href="#6-编译加载" class="headerlink" title="6. 编译加载"></a>6. 编译加载</h5><p>直接使用make编译驱动模块，生成.ko文件，使用<strong>“insmod”</strong>命令加载驱动，通过dmesg和tail结合显示详细的加载输出信息，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">insmode test.ko</span><br><span class="line">dmesg | tail -5</span><br></pre></td></tr></table></figure>
+<p>也通过<strong>“lsmod”</strong>查看已加载成功的模块，如果不需要了的话可以通过<strong>“rmmod”</strong>命令卸载指定模块。</p>
+<h5 id="7-编写应用测试"><a href="#7-编写应用测试" class="headerlink" title="7. 编写应用测试"></a>7. 编写应用测试</h5><p>为了验证驱动是否能够正常工作，我们在通常需要自己编写一个小的Linux应用程序来使用用一下我们的驱动，测试其是否能正常工作。</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>另外就是Linux驱动是一个很庞大的结构框架，出了上面说的三种驱动类型的基本分类外，Linux系统中还存在很多驱动子系统，这些子系统是建立在三种驱动类型的基础之上的，而很多设备驱动在需要在这些子系统的框架之下编写代码，这种的话就需要了解这些子系统的具体要求了。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2017/06/09/Linux驱动开发小结/" data-id="cjhn48cn10009wgvd0d6cgbjc" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-MIZ702N启动流程与开发流程" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -289,7 +617,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/06/09/MIZ702N启动流程与开发流程/" data-id="cjhd35tzc0006k8vdfwn81xi5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/06/09/MIZ702N启动流程与开发流程/" data-id="cjhn48cn5000fwgvd5idvd8a5" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -423,7 +751,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/05/02/再入嵌入式坑的感想——嵌入式技术是否在进步？/" data-id="cjhd35u0o002dk8vdsd0jwvta" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/05/02/再入嵌入式坑的感想——嵌入式技术是否在进步？/" data-id="cjhn48cod002dwgvdno52rsjd" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -585,7 +913,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/04/30/MIZ702N开发环境的准备2/" data-id="cjhd35tzi000dk8vdl0qjrax3" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/04/30/MIZ702N开发环境的准备2/" data-id="cjhn48cma0004wgvdkmplb0zj" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -738,7 +1066,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/04/28/MIZ702N开发环境的准备1/" data-id="cjhd35tzg000ak8vdze1b5uqt" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/04/28/MIZ702N开发环境的准备1/" data-id="cjhn48cmy0006wgvdl7i4llrr" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -906,7 +1234,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/04/04/机器学习——k邻近算法和决策树算法/" data-id="cjhd35u1e003wk8vdyw2q1l93" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/04/04/机器学习——k邻近算法和决策树算法/" data-id="cjhn48cpd0040wgvdwnmq62j7" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1048,7 +1376,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/04/03/Qt绘图的方法/" data-id="cjhd35tzs000pk8vdyf6n59vn" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/04/03/Qt绘图的方法/" data-id="cjhn48cnc000owgvd1bln628s" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1238,7 +1566,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/03/11/使用swig将c和c++代码转化为python模块/" data-id="cjhd35u0m0029k8vd90tq1yok" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/03/11/使用swig将c和c++代码转化为python模块/" data-id="cjhn48co80024wgvdpf2l5m2u" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1496,376 +1824,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/03/11/python数据可视化简单操作小结/" data-id="cjhd35u0b001sk8vdpbal3nnw" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-OpenNI使用介绍" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/03/11/OpenNI使用介绍/">OpenNI使用介绍</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/03/11/OpenNI使用介绍/">
-            <time datetime="2017-03-11T12:41:58.000Z" itemprop="datePublished">2017-03-11</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/OpenNI/">OpenNI</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/3D深度传感器/">3D深度传感器</a>, <a class="tag-link" href="/tags/OpenNI/">OpenNI</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h4 id="OpenNI简介"><a href="#OpenNI简介" class="headerlink" title="OpenNI简介"></a>OpenNI简介</h4><p>OpenNI是PrimeSense公司联合其他公司制定的一个多语言、跨平台的规范，以此规范为基础为上层应用提供一个与视觉和音频传感器通信的统一的接口。目前主要应用在各种深度传感器中。</p>
-<h4 id="四大主要的接口类的简单介绍"><a href="#四大主要的接口类的简单介绍" class="headerlink" title="四大主要的接口类的简单介绍"></a>四大主要的接口类的简单介绍</h4><ol>
-<li><p>openni::OpenNI</p>
-<p>OpenNI类是应用使用OpenNI API的唯一入口，除此以外它还提供了访问设备、设备相关事件、版本以及出错信息的方法</p>
-</li>
-<li><p>openni::Device</p>
-<p>对于一个sensor设备OpenNI会提供一个Device类，在生Device对象create前需要先对OpenNI进行initializ</p>
-</li>
-<li><p>openni::VideoStream</p>
-<p>VideoStream类提供是设备中的一个视屏流封操作接口，需要依赖Device对象，而被VideoFrameRef对象所依赖。</p>
-</li>
-<li><p>openni::VideoFrameRef</p>
-<p>VideoFrameRef是视频流属性和元数据的接口类</p>
-</li>
-</ol>
-<p>另外其他重要的类有：</p>
-<ul>
-<li>Recorder类：提供将视屏流存储到文件中的接口</li>
-<li>Listener类：检测OpneNI和视频流的个各种事件</li>
-<li>DeviceInfo类：提供设备和设备事件的信息接口</li>
-</ul>
-<h4 id="OpenNI类"><a href="#OpenNI类" class="headerlink" title="OpenNI类"></a>OpenNI类</h4><ol>
-<li><p>基本设备操作函数</p>
-<ul>
-<li>OpenNI::initialize(), OpenNI环境的初始化，初始化成功后才能使用其他函数</li>
-<li>OpenNI::enumerateDevices(), 系统中所有可用设备的枚举</li>
-<li>OpenNI::shutdown(), OpenNI关闭</li>
-<li>OpenNI::waitForAnyStream(), 等待指定视频流的数据更新，用于阻塞轮询</li>
-<li>OpenNI::getExtendedError(), 获取错误信息</li>
-<li>OpenNI::getVerion(), 获取版本信息</li>
-</ul>
-</li>
-<li><p>注册事件监听函数</p>
-<ul>
-<li>OpenNI::addDeviceConnectedListener(), 注册监听设备连接事件</li>
-<li>OpenNI::addDeviceDisconnectedListener(), 注册监听设备移除事件</li>
-<li>OpenNI::addDeviceStateChangedListener(), 注册监听设备状态改变事件</li>
-</ul>
-<p>这些函数都另外有对应的remove函数，这些事件都指向一个OpenNI::DeviceInfo类。</p>
-</li>
-</ol>
-<h4 id="Devices类"><a href="#Devices类" class="headerlink" title="Devices类"></a>Devices类</h4><p>既可以连接的物理设备，也可以连接到ONI文件。</p>
-<ol>
-<li><p>基本操作函数</p>
-<ul>
-<li>Devices::open(), 打开设备</li>
-<li>Devices::close(), 关闭设备</li>
-<li>Devices::isValid(), 判读是否是实际的设备</li>
-<li>Devices::getDeviceInfo(), 获取设备信息类</li>
-<li>Devices::hasSensor(), 是否有指定的传感器</li>
-</ul>
-</li>
-<li><p>参数配置函数</p>
-<ul>
-<li>设置Registration标定配置： setImageRegistrationMode()</li>
-<li>设置同步FrameSync配置： setDepthColorSyncEnabled()</li>
-<li>其他配置设置： setProperty()</li>
-</ul>
-</li>
-</ol>
-<h4 id="VideoStream类"><a href="#VideoStream类" class="headerlink" title="VideoStream类"></a>VideoStream类</h4><ol>
-<li><p>基本操作函数</p>
-<ul>
-<li>VideoStream::create(), 创建流，需要一个已经初始化的Devices对象</li>
-<li>VideoStream::start(), 数据流传输开始</li>
-<li>VideoStream::stop(), 数据流停止</li>
-<li>VideoStream::readFrame(), 读取一帧数据，用于轮询阻塞读取</li>
-<li>VideoStream::onNewFrame(), 新的一帧数据事件函数，需要其他设置</li>
-</ul>
-</li>
-</ol>
-<h4 id="VideoStreamRef类"><a href="#VideoStreamRef类" class="headerlink" title="VideoStreamRef类"></a>VideoStreamRef类</h4><p>最常见的作用是作为readFrame()函数的操作，接收数据。</p>
-<ol>
-<li><p>基本操作</p>
-<ul>
-<li>VideoStreamRef::getData(), 获取原始数据指针</li>
-<li>VideoStreamRef::getVideoMode(), 获取视屏模式</li>
-<li>VideoStreamRef::getVideoMode().getResolutionX()、VideoStreamRef::getVideoMode().getResolutionY(), 获取视屏分辨率</li>
-<li>VideoStreamRef::getSensorType(), 获取sensor类型</li>
-</ul>
-</li>
-</ol>
-<h4 id="DeviceInfo类"><a href="#DeviceInfo类" class="headerlink" title="DeviceInfo类"></a>DeviceInfo类</h4><ul>
-<li>DeviceInfo::getUri(), 获取设备Uri</li>
-</ul>
-<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ol>
-<li><em><a href="https://s3.amazonaws.com/com.occipital.openni/OpenNI_Programmers_Guide.pdf" target="_blank" rel="noopener">《OPENNI PROGRAMMER’S GUIDE》</a></em></li>
-</ol>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2017/03/11/OpenNI使用介绍/" data-id="cjhd35tzo000lk8vdsl8k09t3" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-初次接触WFP的一些感受" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/03/11/初次接触WFP的一些感受/">初次接触WFP的一些感受</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/03/11/初次接触WFP的一些感受/">
-            <time datetime="2017-03-11T12:39:58.000Z" itemprop="datePublished">2017-03-11</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/WPF/">WPF</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/C/">C#</a>, <a class="tag-link" href="/tags/VS/">VS</a>, <a class="tag-link" href="/tags/WPF/">WPF</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>学习一项新东西之前，先对他有一个简单慨括性的认识时十分由必要的，如果只是一股脑儿的扎进去，往往得达不到你想要的效果。这是我以前经常会犯的错误，花费了大量的精力纠缠于细枝末节，结果却收获甚少。所以这一次为了学会使用WPF，我先到网上查找了很多资料关于WPF的资料和其他开发这对它的评价。</p>
-<p>俗话说的好，磨刀不误砍柴工，尽管我还一句代码都没有写，但是通过查找的这些信息，我却已经对WPF设计的目的、优缺点以及其使用范围有了一很清晰的认识。</p>
-<h4 id="WPF是什么"><a href="#WPF是什么" class="headerlink" title="WPF是什么"></a>WPF是什么</h4><p>在没有了解它之前，我一直都傻傻的搞不清C#和WPF的关系，现在终于懂了，简单来说WPF只是一套界面开发系统，只是由于主要用C#开发，所以常常被一起提及。</p>
-<p>稍微官方一点，WPF是Windows Presentation Foundation的缩写， 中文译为“Windows呈现基础”，是微软推出的基于Windows Vista的用户界面框架，由 .NET Framework 3.0 开始引入，与 Windows Communication Foundation及 Windows Workflow Foundation并行为新一代 Windows操作系统以及 WinFX 的三个重大应用程序开发类库。</p>
-<p>以上是参考百度官方的解释，听起来很高大上，实际上用WPF也是能够做出很炫的界面来的。但是从微软推出来这么多年了，却很少商业的软件使用它，也证明了它实际上还是有很多不足之处，或者合适的适用范围不算大，其他领域有更优秀的替代者。</p>
-<h4 id="WPF的特点"><a href="#WPF的特点" class="headerlink" title="WPF的特点"></a>WPF的特点</h4><p>大家谈WPF的时候总是对比WinForm，可惜我WinForm了没有做过，只能对比一下老掉牙的MFC了。</p>
-<ol>
-<li><p>使用了比较强大的xaml语言来设计界面</p>
-<p>回想一下MFC是怎么开发界面的：当然是直接拖放控件啦。通过可视化的界面设计器设计ui，VS则同步将你的修改翻译成文本文件，来记录窗口和它上面控件的位置和大小。但是也仅仅于此，MFC使用的这种界面记录语言对界面的控制表达能力太若了，除了了记录控件的固定的位置、大小，以及一些简单的固有属性，我真不清楚它还有什么其他作用。不过说起来，这个文本文件本来就不算是一个有比较清晰的语法规范的语言，而且在实际使用时，基本上不会用到它，而是直接拖放界面。总的来说用MFC的界面设计器来设计界面，可以说除了直观一点外，没有什么其他好处，所以我在做MFC时，宁愿直接用C++代码来实现，这样至少保证我的程序是一个完整的整体，大部分代码都能在我自己的控制范围内，不会出现因为界面某次操作错误而导致程序无法编译，然后还没法去排查错误的问题。</p>
-<p>而在WPF中就不一样了，同样的可视化设计，但是它的核心却在它的设计脚本语言上。它采用的界面设计语言xaml是XML的扩展，可以完成非常复杂而精细的界面控制。就我个人的初步体验来看，它是非常类似于用html来设计网页。如界面元素的布局、排版、对齐，终于可以不再花费大量的时间去手动实现了，基本上界面的控制都可以用xaml来控制。由于xaml是本质上是XML，遵循的XML的标准，这使得它有清晰、标准的语法结构，这样使它的控制力和可读性都使非常强的。</p>
-<p>另外，在独立控制界面的基础上，xaml还有一些与后台通信的方式，这使得WPF设计界面即保持了很强的独立性，有可以方便与后台保持交互。</p>
-</li>
-<li><p>数据驱动</p>
-<p>对与刚刚接触WPF的我，数据驱动是让我映像最深刻的一个特性。把控件的数据源和数据绑定，直接操作数据，界面就会跟随更新，这就让数据和界面分离开来了，而且将原来可能本来使对复杂界面的变成了直接对数据的操作，一下子让程序简单了很多。通常对复杂的数据会抽象成模型，便于做统一的操作。</p>
-<p>实际上这样的特性我在Qt中已经有所接触。Qt里使用的是MVC模式，WPF则使用的是MVVC模式，由于加入了多个V（ViewMode）层，让它有了更好的特性，如：双向绑定技术，界面和数据源绑定后，任意一方改变，另一方都会自动跟随改变。至于MFC，就完全看不到这种东西，要操作数据，都是通过传统的方法去做：获取控件本身，然后再获取其数据，然后再修改修改数据。而MFC不同的控件获取的方法可能不一样或者有是条件和限制的或是需要传入很多其他复杂的参数，这导致它的操作相当的繁琐。</p>
-</li>
-<li><p>一些缺点</p>
-<ul>
-<li>性能差，内存占用量大</li>
-<li>基于.net,在很多低版本的版本的windows上不能使用，其他平台就不用更不说了。</li>
-</ul>
-</li>
-</ol>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2017/03/11/初次接触WFP的一些感受/" data-id="cjhd35u0s002kk8vdwv2vci5c" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/03/11/python数据可视化简单操作小结/" data-id="cjhn48cnw001hwgvddraqt18b" class="article-share-link"><i class="fa fa-share"></i>Partager</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1942,7 +1901,7 @@
 
 
     <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/2/">&laquo; Préc</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">Suiv &raquo;</a>
     </nav>
 </section>
             
@@ -1951,9 +1910,47 @@
    
         
     <div class="widget-wrap">
-        <h3 class="widget-title">recent</h3>
+        <h3 class="widget-title">Récents</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/05/26/SpatialTransformerNetwork了解/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/markdownImage/stn.jpg)" alt="Spatial Transformer Network了解" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/深度学习/">深度学习</a></p>
+                            <p class="item-title"><a href="/2018/05/26/SpatialTransformerNetwork了解/" class="title">Spatial Transformer Network了解</a></p>
+                            <p class="item-date"><time datetime="2018-05-26T08:01:50.000Z" itemprop="datePublished">2018-05-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/05/23/使用OpenCV进行相机标定/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/markdownImage/corner.jpg)" alt="使用OpenCV进行相机标定" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/机器视觉/">机器视觉</a></p>
+                            <p class="item-title"><a href="/2018/05/23/使用OpenCV进行相机标定/" class="title">使用OpenCV进行相机标定</a></p>
+                            <p class="item-date"><time datetime="2018-05-23T13:11:05.000Z" itemprop="datePublished">2018-05-23</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -2012,44 +2009,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/03/16/B站新番信息爬虫设计/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/markdownImage/bangumi_index.png)" alt="B站新番信息爬虫设计" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/web-spider/">web spider</a></p>
-                            <p class="item-title"><a href="/2018/03/16/B站新番信息爬虫设计/" class="title">B站新番信息爬虫设计</a></p>
-                            <p class="item-date"><time datetime="2018-03-16T13:28:42.000Z" itemprop="datePublished">2018-03-16</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/01/17/搜索算法整理/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/算法/">算法</a></p>
-                            <p class="item-title"><a href="/2018/01/17/搜索算法整理/" class="title">搜索算法整理</a></p>
-                            <p class="item-date"><time datetime="2018-01-17T02:13:31.000Z" itemprop="datePublished">2018-01-17</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -2057,43 +2016,43 @@
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">categories</h3>
+        <h3 class="widget-title">Catégories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">60</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/3D技术/">3D技术</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/OpenNI/">OpenNI</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/Qt/">Qt</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/SLAM/">SLAM</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/WPF/">WPF</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/hexo/">hexo</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/web-spider/">web spider</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/图像处理/">图像处理</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/多线程-多进程/">多线程/多进程</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/嵌入式/">嵌入式</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/开发工具环境/">开发工具环境</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/开发环境/">开发环境</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/数据可视化/">数据可视化</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/机器学习/">机器学习</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/机器视觉/">机器视觉</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/深度学习/">深度学习</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/算法/">算法</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/虚拟现实/">虚拟现实</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂谈/">杂谈</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/杂谈/Minecraft/">Minecraft</a><span class="category-list-count">1</span></li></ul></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">62</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/3D技术/">3D技术</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/OpenNI/">OpenNI</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/Qt/">Qt</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/SLAM/">SLAM</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/WPF/">WPF</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/hexo/">hexo</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/web-spider/">web spider</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/图像处理/">图像处理</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/多线程-多进程/">多线程/多进程</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/嵌入式/">嵌入式</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/开发工具环境/">开发工具环境</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/数据可视化/">数据可视化</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/机器学习/">机器学习</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/机器视觉/">机器视觉</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/深度学习/">深度学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/算法/">算法</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/虚拟现实/">虚拟现实</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂谈/">杂谈</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/杂谈/Minecraft/">Minecraft</a><span class="category-list-count">1</span></li></ul></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">archives</h3>
+        <h3 class="widget-title">Archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">tags</h3>
+        <h3 class="widget-title">Tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/3D深度传感器/">3D深度传感器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AR/">AR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C#</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/InnoDB/">InnoDB</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MIZ702N/">MIZ702N</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MOOC/">MOOC</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Minecraft/">Minecraft</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenCV/">OpenCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenNI/">OpenNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PIL/">PIL</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyQt/">PyQt</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt/">Qt</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt-Designer/">Qt Designer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SLAM/">SLAM</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity3D/">Unity3D</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VR/">VR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VS/">VS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WPF/">WPF</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/XAMPP/">XAMPP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZYNQ7000/">ZYNQ7000</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anaconda/">anaconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arm-liunx-gcc/">arm-liunx-gcc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/">cmake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/conda/">conda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cython/">cython</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep learning</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gluon/">gluon</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/human-visual-system/">human visual system</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/juptyer/">juptyer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jupyter/">jupyter</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k邻近算法/">k邻近算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/matplotlib/">matplotlib</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mxnet/">mxnet</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/numpy/">numpy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openCV/">openCV</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpMyAdmin/">phpMyAdmin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyinstaller/">pyinstaller</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyqt/">pyqt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sublime/">sublime</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swig/">swig</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-spider/">web spider</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/决策树/">决策树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/双目视觉/">双目视觉</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像处理/">图像处理</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像特征点/">图像特征点</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/学习总结/">学习总结</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/嵌入式/">嵌入式</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/张氏标定/">张氏标定</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索算法/">搜索算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摄像头/">摄像头</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/最大公约数/">最大公约数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/最短路径/">最短路径</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器视觉/">机器视觉</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/梯度下降算法/">梯度下降算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率论/">概率论</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/欧几里德算法/">欧几里德算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/直方图/">直方图</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机标定/">相机标定</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机模型/">相机模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/蒙特卡洛算法/">蒙特卡洛算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件设计/">软件设计</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/驱动开发/">驱动开发</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/3D深度传感器/">3D深度传感器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AR/">AR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C#</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/InnoDB/">InnoDB</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MIZ702N/">MIZ702N</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MOOC/">MOOC</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Minecraft/">Minecraft</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenCV/">OpenCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenNI/">OpenNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PIL/">PIL</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyQt/">PyQt</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt/">Qt</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt-Designer/">Qt Designer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SLAM/">SLAM</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STN/">STN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spatial-Transformer-Network/">Spatial Transformer Network</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity3D/">Unity3D</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VR/">VR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VS/">VS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WPF/">WPF</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/XAMPP/">XAMPP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZYNQ7000/">ZYNQ7000</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anaconda/">anaconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arm-liunx-gcc/">arm-liunx-gcc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/">cmake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/conda/">conda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cython/">cython</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep learning</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gluon/">gluon</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/human-visual-system/">human visual system</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jupyter/">jupyter</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k邻近算法/">k邻近算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/matplotlib/">matplotlib</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mxnet/">mxnet</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/numpy/">numpy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openCV/">openCV</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencv/">opencv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpMyAdmin/">phpMyAdmin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyinstaller/">pyinstaller</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyqt/">pyqt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sublime/">sublime</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swig/">swig</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-spider/">web spider</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/决策树/">决策树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/双目视觉/">双目视觉</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像处理/">图像处理</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像特征点/">图像特征点</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/学习总结/">学习总结</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/嵌入式/">嵌入式</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/张氏标定/">张氏标定</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索算法/">搜索算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摄像头/">摄像头</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/最大公约数/">最大公约数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/最短路径/">最短路径</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器视觉/">机器视觉</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/梯度下降算法/">梯度下降算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率论/">概率论</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/欧几里德算法/">欧几里德算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/直方图/">直方图</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机标定/">相机标定</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机模型/">相机模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/神经网络/">神经网络</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间变换/">空间变换</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/蒙特卡洛算法/">蒙特卡洛算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件设计/">软件设计</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/驱动开发/">驱动开发</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">tag cloud</h3>
+        <h3 class="widget-title">Nuage de tags</h3>
         <div class="widget tagcloud">
-            <a href="/tags/3D深度传感器/" style="font-size: 10px;">3D深度传感器</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AR/" style="font-size: 10px;">AR</a> <a href="/tags/C/" style="font-size: 11.43px;">C#</a> <a href="/tags/C/" style="font-size: 12.86px;">C++</a> <a href="/tags/CSS/" style="font-size: 10px;">CSS</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/InnoDB/" style="font-size: 10px;">InnoDB</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/MIZ702N/" style="font-size: 12.86px;">MIZ702N</a> <a href="/tags/MOOC/" style="font-size: 18.57px;">MOOC</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/MySQL/" style="font-size: 15.71px;">MySQL</a> <a href="/tags/OpenCV/" style="font-size: 10px;">OpenCV</a> <a href="/tags/OpenNI/" style="font-size: 10px;">OpenNI</a> <a href="/tags/PIL/" style="font-size: 11.43px;">PIL</a> <a href="/tags/PyQt/" style="font-size: 11.43px;">PyQt</a> <a href="/tags/Qt/" style="font-size: 17.14px;">Qt</a> <a href="/tags/Qt-Designer/" style="font-size: 10px;">Qt Designer</a> <a href="/tags/SLAM/" style="font-size: 11.43px;">SLAM</a> <a href="/tags/Unity3D/" style="font-size: 11.43px;">Unity3D</a> <a href="/tags/VR/" style="font-size: 10px;">VR</a> <a href="/tags/VS/" style="font-size: 11.43px;">VS</a> <a href="/tags/WPF/" style="font-size: 11.43px;">WPF</a> <a href="/tags/XAMPP/" style="font-size: 10px;">XAMPP</a> <a href="/tags/ZYNQ7000/" style="font-size: 12.86px;">ZYNQ7000</a> <a href="/tags/anaconda/" style="font-size: 10px;">anaconda</a> <a href="/tags/arm-liunx-gcc/" style="font-size: 10px;">arm-liunx-gcc</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/conda/" style="font-size: 10px;">conda</a> <a href="/tags/cython/" style="font-size: 10px;">cython</a> <a href="/tags/deep-learning/" style="font-size: 12.86px;">deep learning</a> <a href="/tags/gluon/" style="font-size: 10px;">gluon</a> <a href="/tags/hexo/" style="font-size: 12.86px;">hexo</a> <a href="/tags/human-visual-system/" style="font-size: 10px;">human visual system</a> <a href="/tags/juptyer/" style="font-size: 10px;">juptyer</a> <a href="/tags/jupyter/" style="font-size: 11.43px;">jupyter</a> <a href="/tags/k邻近算法/" style="font-size: 10px;">k邻近算法</a> <a href="/tags/markdown/" style="font-size: 11.43px;">markdown</a> <a href="/tags/matplotlib/" style="font-size: 11.43px;">matplotlib</a> <a href="/tags/mxnet/" style="font-size: 11.43px;">mxnet</a> <a href="/tags/numpy/" style="font-size: 10px;">numpy</a> <a href="/tags/openCV/" style="font-size: 12.86px;">openCV</a> <a href="/tags/phpMyAdmin/" style="font-size: 10px;">phpMyAdmin</a> <a href="/tags/pip/" style="font-size: 10px;">pip</a> <a href="/tags/pyinstaller/" style="font-size: 10px;">pyinstaller</a> <a href="/tags/pyqt/" style="font-size: 10px;">pyqt</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/scrapy/" style="font-size: 10px;">scrapy</a> <a href="/tags/sublime/" style="font-size: 10px;">sublime</a> <a href="/tags/swig/" style="font-size: 10px;">swig</a> <a href="/tags/web-spider/" style="font-size: 11.43px;">web spider</a> <a href="/tags/xpath/" style="font-size: 10px;">xpath</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/博客/" style="font-size: 14.29px;">博客</a> <a href="/tags/双目视觉/" style="font-size: 11.43px;">双目视觉</a> <a href="/tags/图像处理/" style="font-size: 18.57px;">图像处理</a> <a href="/tags/图像特征点/" style="font-size: 10px;">图像特征点</a> <a href="/tags/多线程/" style="font-size: 11.43px;">多线程</a> <a href="/tags/学习总结/" style="font-size: 11.43px;">学习总结</a> <a href="/tags/嵌入式/" style="font-size: 15.71px;">嵌入式</a> <a href="/tags/张氏标定/" style="font-size: 10px;">张氏标定</a> <a href="/tags/搜索算法/" style="font-size: 10px;">搜索算法</a> <a href="/tags/摄像头/" style="font-size: 10px;">摄像头</a> <a href="/tags/最大公约数/" style="font-size: 10px;">最大公约数</a> <a href="/tags/最短路径/" style="font-size: 10px;">最短路径</a> <a href="/tags/机器学习/" style="font-size: 11.43px;">机器学习</a> <a href="/tags/机器视觉/" style="font-size: 12.86px;">机器视觉</a> <a href="/tags/树莓派/" style="font-size: 10px;">树莓派</a> <a href="/tags/梯度下降算法/" style="font-size: 10px;">梯度下降算法</a> <a href="/tags/概率论/" style="font-size: 10px;">概率论</a> <a href="/tags/欧几里德算法/" style="font-size: 10px;">欧几里德算法</a> <a href="/tags/游戏/" style="font-size: 12.86px;">游戏</a> <a href="/tags/直方图/" style="font-size: 11.43px;">直方图</a> <a href="/tags/相机标定/" style="font-size: 11.43px;">相机标定</a> <a href="/tags/相机模型/" style="font-size: 10px;">相机模型</a> <a href="/tags/蒙特卡洛算法/" style="font-size: 10px;">蒙特卡洛算法</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/调试/" style="font-size: 10px;">调试</a> <a href="/tags/软件设计/" style="font-size: 10px;">软件设计</a> <a href="/tags/驱动开发/" style="font-size: 10px;">驱动开发</a>
+            <a href="/tags/3D深度传感器/" style="font-size: 10px;">3D深度传感器</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AR/" style="font-size: 10px;">AR</a> <a href="/tags/C/" style="font-size: 11.43px;">C#</a> <a href="/tags/C/" style="font-size: 12.86px;">C++</a> <a href="/tags/CSS/" style="font-size: 10px;">CSS</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/InnoDB/" style="font-size: 10px;">InnoDB</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/MIZ702N/" style="font-size: 12.86px;">MIZ702N</a> <a href="/tags/MOOC/" style="font-size: 18.57px;">MOOC</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/MySQL/" style="font-size: 15.71px;">MySQL</a> <a href="/tags/OpenCV/" style="font-size: 10px;">OpenCV</a> <a href="/tags/OpenNI/" style="font-size: 10px;">OpenNI</a> <a href="/tags/PIL/" style="font-size: 11.43px;">PIL</a> <a href="/tags/PyQt/" style="font-size: 11.43px;">PyQt</a> <a href="/tags/Qt/" style="font-size: 17.14px;">Qt</a> <a href="/tags/Qt-Designer/" style="font-size: 10px;">Qt Designer</a> <a href="/tags/SLAM/" style="font-size: 11.43px;">SLAM</a> <a href="/tags/STN/" style="font-size: 10px;">STN</a> <a href="/tags/Spatial-Transformer-Network/" style="font-size: 10px;">Spatial Transformer Network</a> <a href="/tags/Unity3D/" style="font-size: 11.43px;">Unity3D</a> <a href="/tags/VR/" style="font-size: 10px;">VR</a> <a href="/tags/VS/" style="font-size: 11.43px;">VS</a> <a href="/tags/WPF/" style="font-size: 11.43px;">WPF</a> <a href="/tags/XAMPP/" style="font-size: 10px;">XAMPP</a> <a href="/tags/ZYNQ7000/" style="font-size: 12.86px;">ZYNQ7000</a> <a href="/tags/anaconda/" style="font-size: 10px;">anaconda</a> <a href="/tags/arm-liunx-gcc/" style="font-size: 10px;">arm-liunx-gcc</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/conda/" style="font-size: 10px;">conda</a> <a href="/tags/cython/" style="font-size: 10px;">cython</a> <a href="/tags/deep-learning/" style="font-size: 14.29px;">deep learning</a> <a href="/tags/gluon/" style="font-size: 10px;">gluon</a> <a href="/tags/hexo/" style="font-size: 12.86px;">hexo</a> <a href="/tags/human-visual-system/" style="font-size: 10px;">human visual system</a> <a href="/tags/jupyter/" style="font-size: 12.86px;">jupyter</a> <a href="/tags/k邻近算法/" style="font-size: 10px;">k邻近算法</a> <a href="/tags/markdown/" style="font-size: 11.43px;">markdown</a> <a href="/tags/matplotlib/" style="font-size: 11.43px;">matplotlib</a> <a href="/tags/mxnet/" style="font-size: 11.43px;">mxnet</a> <a href="/tags/numpy/" style="font-size: 10px;">numpy</a> <a href="/tags/openCV/" style="font-size: 12.86px;">openCV</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/phpMyAdmin/" style="font-size: 10px;">phpMyAdmin</a> <a href="/tags/pip/" style="font-size: 10px;">pip</a> <a href="/tags/pyinstaller/" style="font-size: 10px;">pyinstaller</a> <a href="/tags/pyqt/" style="font-size: 10px;">pyqt</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/scrapy/" style="font-size: 10px;">scrapy</a> <a href="/tags/sublime/" style="font-size: 10px;">sublime</a> <a href="/tags/swig/" style="font-size: 10px;">swig</a> <a href="/tags/web-spider/" style="font-size: 11.43px;">web spider</a> <a href="/tags/xpath/" style="font-size: 10px;">xpath</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/博客/" style="font-size: 14.29px;">博客</a> <a href="/tags/双目视觉/" style="font-size: 12.86px;">双目视觉</a> <a href="/tags/图像处理/" style="font-size: 18.57px;">图像处理</a> <a href="/tags/图像特征点/" style="font-size: 10px;">图像特征点</a> <a href="/tags/多线程/" style="font-size: 11.43px;">多线程</a> <a href="/tags/学习总结/" style="font-size: 11.43px;">学习总结</a> <a href="/tags/嵌入式/" style="font-size: 15.71px;">嵌入式</a> <a href="/tags/张氏标定/" style="font-size: 11.43px;">张氏标定</a> <a href="/tags/搜索算法/" style="font-size: 10px;">搜索算法</a> <a href="/tags/摄像头/" style="font-size: 10px;">摄像头</a> <a href="/tags/最大公约数/" style="font-size: 10px;">最大公约数</a> <a href="/tags/最短路径/" style="font-size: 10px;">最短路径</a> <a href="/tags/机器学习/" style="font-size: 11.43px;">机器学习</a> <a href="/tags/机器视觉/" style="font-size: 14.29px;">机器视觉</a> <a href="/tags/树莓派/" style="font-size: 10px;">树莓派</a> <a href="/tags/梯度下降算法/" style="font-size: 10px;">梯度下降算法</a> <a href="/tags/概率论/" style="font-size: 10px;">概率论</a> <a href="/tags/欧几里德算法/" style="font-size: 10px;">欧几里德算法</a> <a href="/tags/游戏/" style="font-size: 12.86px;">游戏</a> <a href="/tags/直方图/" style="font-size: 11.43px;">直方图</a> <a href="/tags/相机标定/" style="font-size: 12.86px;">相机标定</a> <a href="/tags/相机模型/" style="font-size: 10px;">相机模型</a> <a href="/tags/神经网络/" style="font-size: 10px;">神经网络</a> <a href="/tags/空间变换/" style="font-size: 10px;">空间变换</a> <a href="/tags/蒙特卡洛算法/" style="font-size: 10px;">蒙特卡洛算法</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/调试/" style="font-size: 10px;">调试</a> <a href="/tags/软件设计/" style="font-size: 10px;">软件设计</a> <a href="/tags/驱动开发/" style="font-size: 10px;">驱动开发</a>
         </div>
     </div>
 
     
         
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">links</h3>
+        <h3 class="widget-title">Liens</h3>
         <div class="widget">
             <ul>
                 
