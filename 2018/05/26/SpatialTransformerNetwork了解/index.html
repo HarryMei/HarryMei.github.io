@@ -14,7 +14,7 @@
 <meta property="og:description" content="前言最近在看深度神经网络论文的时候，遇到了STN这个名词完全不知道是什么东西，后面搜索后才知道这个原来是Spatial Transformer Network的缩写，一种能做空间变换的神经网络结构。这可让我长见识了，在我的认知中一直以为卷积神经网路就只是一层一层的做图像的特征提取，没想到空间仿射变换也能用神经网络去做。我觉得详细了解其实现细节对于我理解论文后面的内容是很有必要的，所以将学习的一些知">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/markdownImage/stn.jpg">
-<meta property="og:updated_time" content="2018-05-26T08:12:59.525Z">
+<meta property="og:updated_time" content="2018-05-26T08:20:06.117Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spatial Transformer Network了解">
 <meta name="twitter:description" content="前言最近在看深度神经网络论文的时候，遇到了STN这个名词完全不知道是什么东西，后面搜索后才知道这个原来是Spatial Transformer Network的缩写，一种能做空间变换的神经网络结构。这可让我长见识了，在我的认知中一直以为卷积神经网路就只是一层一层的做图像的特征提取，没想到空间仿射变换也能用神经网络去做。我觉得详细了解其实现细节对于我理解论文后面的内容是很有必要的，所以将学习的一些知">
@@ -279,7 +279,7 @@
 </ul>
 <p>下图为STN基本结构示意图</p>
 <p><img src="/markdownImage/stn.jpg" alt="Spatial Transformer Network"></p>
-<h3 id="Localisation-Network"><a href="#Localisation-Network" class="headerlink" title="Localisation Network"></a>Localisation Network</h3><p>Localisation Network可以翻译成定位网络，它的输入是feature map，输出就是仿射变换矩阵。在上面的示意图中，我们看到在Localisation<br>Network画了两对象体，前面的作用是做计算，可以是全连接也可以是卷积，后面是回归层作用是将映射做归一化。</p>
+<h3 id="Localisation-Network"><a href="#Localisation-Network" class="headerlink" title="Localisation Network"></a>Localisation Network</h3><p>Localisation Network可以翻译成定位网络，它的输入是feature map，输出就是仿射变换矩阵。在上面的示意图中，我们看到在Localisation Network画了两对象体，前面的作用是做计算，可以是全连接也可以是卷积，后面是回归层作用是将映射做归一化。</p>
 <h3 id="grid-generator"><a href="#grid-generator" class="headerlink" title="grid generator"></a>grid generator</h3><p>grid generator的作用就是生成双线性插值的坐标网络，它实现的就是逆向坐标映射的结果。</p>
 <h3 id="sampler"><a href="#sampler" class="headerlink" title="sampler"></a>sampler</h3><p>sampler就是使用双线性插值的得到目标图的过程，作者也叫这一步Differentiable Image<br>Sampling，是希望通过写成一种形式上可微的图像采样方法，目的是为了让整个网络保持可以端到端反向传播BP训练。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上，具体结构还是的看原始论文，关于STN的初步内容就介绍完成，写的非常简略的原因是，我参考的大部分文章都对STN网络结构了解到非常深入的程度，所以我也怕写错，详细的东西如还是需要仔细看论文。</p>
@@ -297,7 +297,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/26/SpatialTransformerNetwork了解/" data-id="cjhn4bwt2000p0ovdd39d1bbb" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/26/SpatialTransformerNetwork了解/" data-id="cjhn4koyi000phovd2uiavjxo" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
