@@ -5,19 +5,19 @@
     
     <title>全卷积神经网络FCN介绍 | Harry Mei&#39;Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="前言FCN是Fully Convolutional Networks的缩写，中文即为全卷积神经网络，虽然从字面上看FCN只是在CNN的基础上把原来不是卷积的网络层换成卷积层，但是FCN出现的作用远远不是从这字面上的意思能够传达的。另一方面，当我们在查看FCN资料的时候，总是会看到大家都将它与semanticsegmentation（语义分割）绑在一起说明，这显然这不是偶然，这是因为FCN本来就是为">
+    <meta name="description" content="前言FCN是Fully Convolutional Networks的缩写，中文即为全卷积神经网络，虽然从字面上看FCN只是在CNN的基础上把原来不是卷积的网络层换成卷积层，但是FCN出现的作用远远不是从这字面上的意思能够传达的。另一方面，当我们在查看FCN资料的时候，总是会看到大家都将它与semantic segmentation（语义分割）绑在一起说明，这显然这不是偶然，这是因为FCN本来就是">
 <meta name="keywords" content="deep learning,神经网络,CNN,FCN,语义分割">
 <meta property="og:type" content="article">
 <meta property="og:title" content="全卷积神经网络FCN介绍">
 <meta property="og:url" content="http://yoursite.com/2018/06/18/全卷积神经网络FCN介绍/index.html">
 <meta property="og:site_name" content="Harry Mei&#39;Blog">
-<meta property="og:description" content="前言FCN是Fully Convolutional Networks的缩写，中文即为全卷积神经网络，虽然从字面上看FCN只是在CNN的基础上把原来不是卷积的网络层换成卷积层，但是FCN出现的作用远远不是从这字面上的意思能够传达的。另一方面，当我们在查看FCN资料的时候，总是会看到大家都将它与semanticsegmentation（语义分割）绑在一起说明，这显然这不是偶然，这是因为FCN本来就是为">
+<meta property="og:description" content="前言FCN是Fully Convolutional Networks的缩写，中文即为全卷积神经网络，虽然从字面上看FCN只是在CNN的基础上把原来不是卷积的网络层换成卷积层，但是FCN出现的作用远远不是从这字面上的意思能够传达的。另一方面，当我们在查看FCN资料的时候，总是会看到大家都将它与semantic segmentation（语义分割）绑在一起说明，这显然这不是偶然，这是因为FCN本来就是">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/markdownImage/FCN.jpg">
-<meta property="og:updated_time" content="2018-06-18T07:33:20.033Z">
+<meta property="og:updated_time" content="2018-06-18T07:42:00.617Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="全卷积神经网络FCN介绍">
-<meta name="twitter:description" content="前言FCN是Fully Convolutional Networks的缩写，中文即为全卷积神经网络，虽然从字面上看FCN只是在CNN的基础上把原来不是卷积的网络层换成卷积层，但是FCN出现的作用远远不是从这字面上的意思能够传达的。另一方面，当我们在查看FCN资料的时候，总是会看到大家都将它与semanticsegmentation（语义分割）绑在一起说明，这显然这不是偶然，这是因为FCN本来就是为">
+<meta name="twitter:description" content="前言FCN是Fully Convolutional Networks的缩写，中文即为全卷积神经网络，虽然从字面上看FCN只是在CNN的基础上把原来不是卷积的网络层换成卷积层，但是FCN出现的作用远远不是从这字面上的意思能够传达的。另一方面，当我们在查看FCN资料的时候，总是会看到大家都将它与semantic segmentation（语义分割）绑在一起说明，这显然这不是偶然，这是因为FCN本来就是">
 <meta name="twitter:image" content="http://yoursite.com/markdownImage/FCN.jpg">
     
 
@@ -256,25 +256,25 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>FCN是Fully Convolutional Networks的缩写，中文即为全卷积神经网络，虽然从字面上看FCN只是在CNN的基础上把原来不是卷积的网络层换<br>成卷积层，但是FCN出现的作用远远不是从这字面上的意思能够传达的。另一方面，当我们在查看FCN资料的时候，总是会看到大家都将它与semantic<br>segmentation（语义分割）绑在一起说明，这显然这不是偶然，这是因为FCN本来就是为更好的使用神经网络解决semantic<br>segmentation问题，在CVPR 2015拿到best paper候选的论文：<a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">Fully Convolutional Networks for<br>Semantic Segmentation</a>中首次提出的。</p>
-<p>那么什么是semantic segmentation语义分割呢？在我的理解中语义分割更高层次的图像分割，相比图像分割只是简单的将图像分成不同区块碎片，语义分割要<br>求分割的物体是由意义的整体。如下图，语义分割能够在整张图像中识别分离出自行车和人，而图像分割则不能达到这一目标，只能分割出意义不明的区域。</p>
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>FCN是Fully Convolutional Networks的缩写，中文即为全卷积神经网络，虽然从字面上看FCN只是在CNN的基础上把原来不是卷积的网络层换成卷积层，但是FCN出现的作用远远不是从这字面上的意思能够传达的。另一方面，当我们在查看FCN资料的时候，总是会看到大家都将它与semantic segmentation（语义分割）绑在一起说明，这显然这不是偶然，这是因为FCN本来就是为更好的使用神经网络解决semantic segmentation问题，在CVPR 2015拿到best paper候选的论文：<a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">Fully Convolutional Networks for Semantic Segmentation</a>中首次提出的。</p>
+<p>那么什么是semantic segmentation语义分割呢？在我的理解中语义分割更高层次的图像分割，相比图像分割只是简单的将图像分成不同区块碎片，语义分割要求分割的物体是由意义的整体。如下图，语义分割能够在整张图像中识别分离出自行车和人，而图像分割则不能达到这一目标，只能分割出意义不明的区域。</p>
 <p><img src="/markdownImage/semanticSegmentation1.jpg" alt="semantic segmentation"></p>
-<h2 id="CNN和语义分割"><a href="#CNN和语义分割" class="headerlink" title="CNN和语义分割"></a>CNN和语义分割</h2><p>正如我们提到机器学习就想到回归和分类一样（当然深度学习更加注重分类问题），当我们提到CNN就肯定会将它与图像分类问题联系在一起。确实CNN在处理图像分类问题上是<br>非常强大的，但是毕竟图像分类问题太单一了，在复杂的视觉应用场景中，仅仅通过图像分类是远远达不到最终的目标的，那么我们是否能够用CNN来解决其他方面的图像处理的任<br>务呢，如语义分割？</p>
-<p>答案当然是可以的，基于CNN的分割的做法是：对每个像素点，都使用其领域块作为图像导入到CNN中做一次计算，得到预测分类的结果，把相同分类的像素点分离出来就完成了<br>分割。这样做的缺点是：1. 存储开销大；2. 计算效率低，相邻像素的是分开预测导致很多计算是重复的；3. 像素领域块的大小限制了感知区。</p>
-<p>从另外一个角度去分析，CNN在图像分类任务中做得很好，主要原因是CNN的多层结构能够让其能够从浅层特征中提取得到更加抽象的特征，这些高级的特征可以降低空间位置、<br>大小、角度的因素的影响，这对于识别和分类帮助很大。但是高度的抽象也让它让丢失了对物体细节的描叙，另外经典的CNN在卷积层之后使用全连接层得到固定长度的特征向量进<br>行分类，全连接层进一步的丢失了图像的空间信息。正是如此，CNN要做到像素级的分割任务就很有难度了。</p>
+<h2 id="CNN和语义分割"><a href="#CNN和语义分割" class="headerlink" title="CNN和语义分割"></a>CNN和语义分割</h2><p>正如我们提到机器学习就想到回归和分类一样（当然深度学习更加注重分类问题），当我们提到CNN就肯定会将它与图像分类问题联系在一起。确实CNN在处理图像分类问题上是非常强大的，但是毕竟图像分类问题太单一了，在复杂的视觉应用场景中，仅仅通过图像分类是远远达不到最终的目标的，那么我们是否能够用CNN来解决其他方面的图像处理的任<br>务呢，如语义分割？</p>
+<p>答案当然是可以的，基于CNN的分割的做法是：对每个像素点，都使用其领域块作为图像导入到CNN中做一次计算，得到预测分类的结果，把相同分类的像素点分离出来就完成了分割。这样做的缺点是：1. 存储开销大；2. 计算效率低，相邻像素的是分开预测导致很多计算是重复的；3. 像素领域块的大小限制了感知区。</p>
+<p>从另外一个角度去分析，CNN在图像分类任务中做得很好，主要原因是CNN的多层结构能够让其能够从浅层特征中提取得到更加抽象的特征，这些高级的特征可以降低空间位置、大小、角度的因素的影响，这对于识别和分类帮助很大。但是高度的抽象也让它让丢失了对物体细节的描叙，另外经典的CNN在卷积层之后使用全连接层得到固定长度的特征向量进行分类，全连接层进一步的丢失了图像的空间信息。正是如此，CNN要做到像素级的分割任务就很有难度了。</p>
 <h2 id="FCN对CNN的改进"><a href="#FCN对CNN的改进" class="headerlink" title="FCN对CNN的改进"></a>FCN对CNN的改进</h2><h4 id="1-将全连接层改为卷积层"><a href="#1-将全连接层改为卷积层" class="headerlink" title="1. 将全连接层改为卷积层"></a>1. 将全连接层改为卷积层</h4><p>FCN在CNN的基础上对明显的改变就是，将原来CNN接近输出端的全连接层都改为卷积层。</p>
-<p>在神经网络计算时，全连接层和卷积层之间不同点就是，卷积层中的神经元只与输入数据中的一个局部区域连接，并且在同一层上卷积核的参数对这层上的所有神经元是共享的。由于<br>其计算形式的都是点积，所以两者实际上是可以转化的。我们可以用nxnxN的卷积核来代替一个前面是nxnxK的tensor链接上有N个神经元的全连接层，而两者是等价<br>的。</p>
+<p>在神经网络计算时，全连接层和卷积层之间不同点就是，卷积层中的神经元只与输入数据中的一个局部区域连接，并且在同一层上卷积核的参数对这层上的所有神经元是共享的。由于其计算形式的都是点积，所以两者实际上是可以转化的。我们可以用nxnxN的卷积核来代替一个前面是nxnxK的tensor链接上有N个神经元的全连接层，而两者是等价的。</p>
 <p>将全连接层换成卷积层后有什么好处呢？</p>
 <ol>
 <li>首先就是不再限制输入图像尺寸的大小，因为原来是全连接的神经元数量是固定的，输入尺寸不对计算出错；但是换成卷积后，由于卷积层是共享权值的，所以即使输入尺寸不<br>对，卷积运算依旧可以进行。</li>
-<li>其次就是可以在同一次网络的前向计算中得到不同区域的结果，这正是由于FCN不再限定输入图像尺寸，所以当我们用大尺寸的图像做输入时，得到的结果不是一个分类或特<br>征结果，而是一个分类图或者特征图（在FCN一般叫heatmap），这个图分别代表着输入图中对应的各个区域经过网络计算预测的结果。这样比起必须将原始大图分成不同区<br>域输入到网络中重复计算才能得到各部分结果的CNN的要高效多了。</li>
+<li>其次就是可以在同一次网络的前向计算中得到不同区域的结果，这正是由于FCN不再限定输入图像尺寸，所以当我们用大尺寸的图像做输入时，得到的结果不是一个分类或特征结果，而是一个分类图或者特征图（在FCN一般叫heatmap），这个图分别代表着输入图中对应的各个区域经过网络计算预测的结果。这样比起必须将原始大图分成不同区域输入到网络中重复计算才能得到各部分结果的CNN的要高效多了。</li>
 </ol>
 <p>下图为FCN和CNN的对比结果：</p>
 <p><img src="/markdownImage/FCN.jpg" alt="FCN VS CNN"></p>
-<h4 id="2-将上采样的加入的网络中"><a href="#2-将上采样的加入的网络中" class="headerlink" title="2. 将上采样的加入的网络中"></a>2. 将上采样的加入的网络中</h4><p>当我们换掉的全连接层后，就接触了很多限制，前面我们就讲了我们将不再限定输入图像的尺寸。那么进一步我们希望输出的也不仅仅是一个数值或一组数值结果，而是一张图像，这<br>对于像语义分割在内的像素级的图像处理任务是非常有利的。</p>
-<p>以语义分割为例，我一般会希望得到一张与原图像同样尺寸的已经分割好的图像，那么应该怎么得到这样的结果呢？我们知道图像经过的卷积和池化后，尺寸会越来越小、特征会越来<br>越多，最后一层卷积层输出的结果在FCN中被称为heatmap热图。为了输出原始图像的尺寸，我们需要在heatmap后面加入上采样层，将heatmap放大到原图尺<br>寸，并且利用heatmap中高维的特诊信息确定放大后像素的分类，这就是一个end-to-end（端到端）的系统。</p>
+<h4 id="2-将上采样的加入的网络中"><a href="#2-将上采样的加入的网络中" class="headerlink" title="2. 将上采样的加入的网络中"></a>2. 将上采样的加入的网络中</h4><p>当我们换掉的全连接层后，就接触了很多限制，前面我们就讲了我们将不再限定输入图像的尺寸。那么进一步我们希望输出的也不仅仅是一个数值或一组数值结果，而是一张图像，这对于像语义分割在内的像素级的图像处理任务是非常有利的。</p>
+<p>以语义分割为例，我一般会希望得到一张与原图像同样尺寸的已经分割好的图像，那么应该怎么得到这样的结果呢？我们知道图像经过的卷积和池化后，尺寸会越来越小、特征会越来越多，最后一层卷积层输出的结果在FCN中被称为heatmap热图。为了输出原始图像的尺寸，我们需要在heatmap后面加入上采样层，将heatmap放大到原图尺寸，并且利用heatmap中高维的特诊信息确定放大后像素的分类，这就是一个end-to-end（端到端）的系统。</p>
 <p>关于上采样具体是怎么实现的，我自己也还没有理解得很清楚，但是原理上可以肯定确定的，上采样一般使用的是双线性插值，然后通过卷积进行预测来实现的。</p>
-<h4 id="3-skip-layers"><a href="#3-skip-layers" class="headerlink" title="3. skip layers"></a>3. skip layers</h4><p>直接从最后的卷积层的结果上采样会得到图像时比较粗糙的，为了得到更加精细的结果，一般采用skip<br>layer的方法，对浅层的卷积输出的结果进行减小步长的upsampling，得到的fine layer和高层得到的coarse layer做融合。如下图所示：</p>
+<h4 id="3-skip-layers"><a href="#3-skip-layers" class="headerlink" title="3. skip layers"></a>3. skip layers</h4><p>直接从最后的卷积层的结果上采样会得到图像时比较粗糙的，为了得到更加精细的结果，一般采用skip layer的方法，对浅层的卷积输出的结果进行减小步长的upsampling，得到的fine layer和高层得到的coarse layer做融合。如下图所示：</p>
 <p><img src="/markdownImage/skipLayer.jpg" alt="skip layer"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
 <li><a href="https://blog.csdn.net/tangwei2014/article/details/46882257" target="_blank" rel="noopener">论文阅读笔记：Fully Convolutional Networks for Semantic<br>Segmentation</a></li>
@@ -292,7 +292,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/06/18/全卷积神经网络FCN介绍/" data-id="cjijy0ylr002hn8vdsygr3az4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/06/18/全卷积神经网络FCN介绍/" data-id="cjijyc3450027n0vdfum4v6p0" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
