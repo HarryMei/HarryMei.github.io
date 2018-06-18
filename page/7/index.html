@@ -154,7 +154,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                69
+                70
                 <span>posts</span>
             </div>
             <div class="article-info-block">
@@ -207,6 +207,160 @@
 
             
             <section id="main">
+    <article id="post-图像与视频处理——图像的采集" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2016/06/23/图像与视频处理——图像的采集/">图像与视频处理——图像的采集</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/06/23/图像与视频处理——图像的采集/">
+            <time datetime="2016-06-23T07:34:08.000Z" itemprop="datePublished">2016-06-23</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/图像处理/">图像处理</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/MOOC/">MOOC</a>, <a class="tag-link" href="/tags/图像处理/">图像处理</a>, <a class="tag-link" href="/tags/直方图/">直方图</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>图像采集时图像处理的基础，只有采集得到了图像数据后才能够进行图像处理的各种操作。</p>
+<h4 id="图像采集的原理"><a href="#图像采集的原理" class="headerlink" title="图像采集的原理"></a>图像采集的原理</h4><ul>
+<li>主要器件——图像传感器</li>
+</ul>
+<p>现在一般的数码相机的图像传感器都是将光信号转换为电信号，用矩形传感器阵列来生成投射到上面的图片。</p>
+<ul>
+<li>图像采集的过程——将拍摄实物离散化的过程</li>
+</ul>
+<p>离散化是相机对真实实物的模拟，将这些真实实物转换为数字图像信息存储在计算机中。离散化有两方面的内容：</p>
+<ol>
+<li><p>空间的离散化</p>
+<p>空间的离散化是将三位物体的位置信息投射到相机的传感器平面上，转换为数字二维坐标信息。</p>
+</li>
+<li><p>灰度的离散化</p>
+<p>灰度的离散化是对图像上色彩亮度的量化。实际上离散后的灰度值即包括的物体自身的颜色信息，有能够体现空间的深度信息，所以我们采集得到图像虽然是二维的，但是却又三维的感觉</p>
+</li>
+</ol>
+<ul>
+<li>颜色的生成——红绿蓝三原色混合而成</li>
+</ul>
+<p>数码相机的传感器有三种类型的传感器，分别来采集红绿蓝三种颜色的灰度。所以一副彩色的图像是由三幅不同颜色通道的灰度图像组成。</p>
+<p>而实际大多数中低端的数码相机，都没有完整的三种类型的传感器，而是这三种类型的传感器间隔排列的，通过插值法来得到完整的三种颜色通道的灰度图像。</p>
+<h4 id="图像的存储"><a href="#图像的存储" class="headerlink" title="图像的存储"></a>图像的存储</h4><p>仅仅算图像的原始数据，1符图像需要的存储空间是=空间信息x颜色信息：</p>
+<p>坐标空间信息需要: N x M bit，其中N、M表示图像长宽的像素点数<br>颜色信息: 3 x C bit， 其中C表示每种颜色需要的bit位数</p>
+<p>如果是视屏还要算上时间信息和帧率。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2016/06/23/图像与视频处理——图像的采集/" data-id="cjijxp872003qt4vd5fshf2ul" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-图像与视频处理——人体视觉系统" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -317,7 +471,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/06/23/图像与视频处理——人体视觉系统/" data-id="cjijxih45003j3gvdy31xutdl" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/06/23/图像与视频处理——人体视觉系统/" data-id="cjijxp86o0034t4vdvvsfxlio" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -459,7 +613,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/06/18/图像与视频处理——前言/" data-id="cjijxih3y00373gvdnp95c1xa" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/06/18/图像与视频处理——前言/" data-id="cjijxp86y003mt4vd4nutcb5a" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -626,7 +780,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/05/29/前端学习小结/" data-id="cjijxih4j00453gvdb2bjj9m0" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/05/29/前端学习小结/" data-id="cjijxp86j002tt4vd145jzo7k" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -791,7 +945,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/05/27/配置Sublime的Markdown编辑环境/" data-id="cjijxih8v00gc3gvd9i4zfqt9" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/05/27/配置Sublime的Markdown编辑环境/" data-id="cjijxp88h0060t4vdm2nwjhj7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -935,7 +1089,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/05/26/使用hexo常见问题/" data-id="cjijxih3e002l3gvdq8qwvmc4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/05/26/使用hexo常见问题/" data-id="cjijxp86b002gt4vd0nd93kvd" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1098,7 +1252,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/05/26/hexo的配置和主题/" data-id="cjijxih2k00143gvdxh7j1d1b" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/05/26/hexo的配置和主题/" data-id="cjijxp85t001gt4vdlzn5mhvn" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1313,7 +1467,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/05/26/用hexo搭建个人blog/" data-id="cjijxih58005i3gvdb0dpscx9" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/05/26/用hexo搭建个人blog/" data-id="cjijxp882005it4vdjo1ce3cx" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1456,7 +1610,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/05/26/寻找博客的意义/" data-id="cjijxih4z00503gvd4rjl9cvo" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/05/26/寻找博客的意义/" data-id="cjijxp87d004ct4vdag7edmhg" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1584,7 +1738,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/05/25/hello-world/" data-id="cjijxih2t001j3gvd2du6wuu4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/05/25/hello-world/" data-id="cjijxp85q001dt4vdhq8lie6h" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1677,6 +1831,25 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/06/18/全卷积神经网络FCN介绍/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/06/18/全卷积神经网络FCN介绍/" class="title">全卷积神经网络FCN介绍</a></p>
+                            <p class="item-date"><time datetime="2018-06-18T07:21:16.000Z" itemprop="datePublished">2018-06-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/06/18/对极几何的理解/" class="thumbnail">
     
     
@@ -1750,25 +1923,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/05/19/JupyterNotebook使用技巧/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/markdownImage/Nbextensions.jpg)" alt="Jupyter Notebook使用技巧" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/开发工具环境/">开发工具环境</a></p>
-                            <p class="item-title"><a href="/2018/05/19/JupyterNotebook使用技巧/" class="title">Jupyter Notebook使用技巧</a></p>
-                            <p class="item-date"><time datetime="2018-05-19T07:23:05.000Z" itemprop="datePublished">2018-05-19</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1787,7 +1941,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
         </div>
     </div>
 

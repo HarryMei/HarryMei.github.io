@@ -154,7 +154,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                69
+                70
                 <span>posts</span>
             </div>
             <div class="article-info-block">
@@ -207,6 +207,148 @@
 
             
             <section id="main">
+    <article id="post-Qt绘图的方法" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/04/03/Qt绘图的方法/">Qt绘图的方法</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/03/Qt绘图的方法/">
+            <time datetime="2017-04-03T12:36:10.000Z" itemprop="datePublished">2017-04-03</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/Qt/">Qt</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Qt/">Qt</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>QPainter是Qt的画图类，在其中封装了很多底层的绘图函数。使用QPainter可以在多种类型的设备上画图，如：Qt的窗口、QPixmap或者是打印设备上。但是怎么使用它，在哪个地方使用它才能够满足我们的画图要求，却不是仅仅看一个QPainter类说明就行的。以下为在Qt中画图的一些常见方法，有些需要使用到QPainter绘制，而有些则不需要。</p>
+<h4 id="在paintEvent函数中绘图"><a href="#在paintEvent函数中绘图" class="headerlink" title="在paintEvent函数中绘图"></a>在paintEvent函数中绘图</h4><p>在一个窗口上画图，最简单、最直接的方法就重新这个窗口的类的重绘事件的处理函数paintEvent()，在paintEvent函数中实现自己的绘制内容。</p>
+<p>当窗口发生变化需要重绘时，paintEvent函数被会自动被调用。如果需要强制刷新，则可以调用repaint()和update()函数，不要直接使用paintEvent函数。</p>
+<p>在paintEvent函数中画图的实例的C++代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> MainWindow::paintEvent(QPaintEvent *event)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">QPainter <span class="title">painter</span><span class="params">(<span class="keyword">this</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置画笔颜色</span></span><br><span class="line">    painter.setPen(QColor(<span class="number">0</span>, <span class="number">160</span>, <span class="number">230</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置字体：微软雅黑、点大小50、斜体</span></span><br><span class="line">    QFont font;</span><br><span class="line">    font.setFamily(<span class="string">"Microsoft YaHei"</span>);</span><br><span class="line">    font.setPointSize(<span class="number">50</span>);</span><br><span class="line">    font.setItalic(<span class="literal">true</span>);</span><br><span class="line">    painter.setFont(font);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 反走样</span></span><br><span class="line">    painter.setRenderHint(QPainter::Antialiasing, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制图片</span></span><br><span class="line">    painter.drawPixmap(rect(), QPixmap(<span class="string">":/Images/logo"</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制文本</span></span><br><span class="line">    painter.drawText(rect(), Qt::AlignCenter, <span class="string">"Qt"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="利用QGraphicsView和QGraphicsScene绘图"><a href="#利用QGraphicsView和QGraphicsScene绘图" class="headerlink" title="利用QGraphicsView和QGraphicsScene绘图"></a>利用QGraphicsView和QGraphicsScene绘图</h4><p>利用paintEvent函数最基本的绘图方法，不管是主窗口还是窗口上的控件都可以重写paintEvent函数，但是这种方法却不够灵活。有很多时候我们都希望能够在窗口的一个控件上随着程序需要绘制相应的图像对象，这个时候总是要去重写一个控件是很麻烦的事情。这个时候我们可以使用到QGraphicsView和QGraphicsScene来管理和显示需要绘制的图像对象。</p>
+<p>QGraphicsView是一个专门用来显示绘制图像的控件，但是它一般需要配合QGraphicsScene一起才能很好的使用。相比paintEvent实现绘图，QGraphicsView和QGraphicsScene则要高级得多，在这里Graphics View提供的是一种类似于Qt model-view的编程。多个views可以监视同一个场景，而场景包含多个具有多种几何外形的items。QGraphicsView提供了视图部件，它可视化场景中的内容。QGraphicsScene 表示Graphics View中的场景，它能够高效的管理在它其中的场景元素。</p>
+<p>简而言之就是，QGraphicsView是显示的控件，QGraphicsScene是场景本身。显示的控件可以从不同角度展示同一个场景。因此我们在QGraphicsScene绘图，用QGraphicsView显示。</p>
+<p>假定窗口里面有名graphicsView的QGraphicsView，以下为QGraphicsView和QGraphicsScene绘图python代码实例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw</span><span class="params">(self)</span>:</span></span><br><span class="line">    scene = QGraphicsScene()</span><br><span class="line"></span><br><span class="line">    scene.addPixmap(QPixmap(<span class="string">r'E:\CaptureFile\test.png'</span>))</span><br><span class="line">    scene.addRect(QtCore.QRectF(<span class="number">50</span>,<span class="number">50</span>,<span class="number">80</span>,<span class="number">80</span>), QtGui.QPen(QtGui.QColor(<span class="number">255</span>,<span class="number">0</span>,<span class="number">0</span>)))</span><br><span class="line">    scene.addRect(QtCore.QRectF(<span class="number">50</span>,<span class="number">200</span>,<span class="number">80</span>,<span class="number">80</span>), QtGui.QPen(QtGui.QColor(<span class="number">0</span>,<span class="number">255</span>,<span class="number">0</span>)))</span><br><span class="line">    t = scene.addText(<span class="string">"scene test"</span>, QtGui.QFont(<span class="string">"Arial"</span>, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line">    self.graphicsView.setAlignment(QtCore.Qt.AlignHorizontal_Mask)</span><br><span class="line">    self.graphicsView.setScene(scene)</span><br><span class="line">    self.graphicsView.show()</span><br></pre></td></tr></table></figure>
+<p>除去以上代码，QGraphicsView和QGraphicsScene还可以结合QPainter来绘制，前面就提过QPainter是可以在QPixmap上绘制的，所以我们可以先用QPainter在一个QPixmap上绘制好图像，然后将其添加到场景中显示，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw</span><span class="params">(self)</span>:</span></span><br><span class="line">    scene = QGraphicsScene()</span><br><span class="line">    mp = QPixmap(<span class="string">r'E:\CaptureFile\test.png'</span>)</span><br><span class="line">    paint = QPainter()</span><br><span class="line">    paint.begin(mp)</span><br><span class="line">    paint.drawEllipse(<span class="number">10</span>,<span class="number">20</span>, <span class="number">80</span>,<span class="number">70</span>)</span><br><span class="line">    paint.drawRect(<span class="number">100</span>,<span class="number">100</span>,<span class="number">200</span>,<span class="number">200</span>)</span><br><span class="line">    paint.end()</span><br><span class="line">    scene.addPixmap(mp)</span><br><span class="line">    self.graphicsView_1.setScene(scene)</span><br><span class="line">    self.graphicsView_1.show()</span><br></pre></td></tr></table></figure>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>除开QPainter画图外，我们还可以利用其他库进行绘制图像，如python中的PIL.Image库，然后用Qt进行显示。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2017/04/03/Qt绘图的方法/" data-id="cjijxp855000ht4vd72udul5a" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-使用swig将c和c++代码转化为python模块" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -321,7 +463,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/03/11/使用swig将c和c++代码转化为python模块/" data-id="cjijxih3400223gvd6juyv3c2" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/03/11/使用swig将c和c++代码转化为python模块/" data-id="cjijxp86i002rt4vd397ua6b7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -579,7 +721,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/03/11/python数据可视化简单操作小结/" data-id="cjijxih2v001o3gvdbmkhyoan" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/03/11/python数据可视化简单操作小结/" data-id="cjijxp860001tt4vdbcwxv1j6" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -796,7 +938,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/03/11/OpenNI使用介绍/" data-id="cjijxih27000n3gvd3hu4t950" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/03/11/OpenNI使用介绍/" data-id="cjijxp85b000pt4vdden64n3h" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -948,7 +1090,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/03/11/初次接触WFP的一些感受/" data-id="cjijxih3j002o3gvdi2l87d4k" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/03/11/初次接触WFP的一些感受/" data-id="cjijxp86g002mt4vd74o2tfek" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1133,7 +1275,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/03/11/MySQL的使用简介/" data-id="cjijxih1r00063gvdqxqga6lh" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/03/11/MySQL的使用简介/" data-id="cjijxp852000et4vdb0boo0sj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1298,7 +1440,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/01/14/VS创建C#控制台和WPF工程介绍/" data-id="cjijxih2i00113gvdu4dqgqoj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/01/14/VS创建C#控制台和WPF工程介绍/" data-id="cjijxp85p001at4vd4h05dst8" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1522,7 +1664,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/01/14/MySQL的常用SQL语句和简单存储过程/" data-id="cjijxih29000p3gvdcdogid9e" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/01/14/MySQL的常用SQL语句和简单存储过程/" data-id="cjijxp851000dt4vd2m2ctlw1" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1673,7 +1815,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/01/14/用XAMPP提供网络mysql数据库服务/" data-id="cjijxih54005e3gvd0lih7b1q" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/01/14/用XAMPP提供网络mysql数据库服务/" data-id="cjijxp87w005et4vdg98rv31i" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1825,172 +1967,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2017/01/08/机器学习——梯度下降算法的理解/" data-id="cjijxih4m004b3gvdl3qwxulb" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-python工作线程与界面的交互" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/01/04/python工作线程与界面的交互/">python工作线程与界面的交互</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/01/04/python工作线程与界面的交互/">
-            <time datetime="2017-01-04T12:05:04.000Z" itemprop="datePublished">2017-01-04</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/多线程-多进程/">多线程/多进程</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Qt/">Qt</a>, <a class="tag-link" href="/tags/python/">python</a>, <a class="tag-link" href="/tags/多线程/">多线程</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h4 id="常见的场景"><a href="#常见的场景" class="headerlink" title="常见的场景"></a>常见的场景</h4><p>在界面的程序设计中，一旦需要执行的任务操作需要很长时间才能完成时，往往需要一个单独的线程来独立负责，如果直接放在界面的主线程中，则会导致界面消息长时间不能得到响应，界面卡死。而一旦使用到多线程则，则需要考虑诸如线程间的通信、线程的同步等问题，在这里仅针对工作线程与界面线程交互的问题，这个数据属于通信问题，不过对象比较特殊，且时在python的环境下。</p>
-<h4 id="问题描叙"><a href="#问题描叙" class="headerlink" title="问题描叙"></a>问题描叙</h4><p>在我的项目中，使用Qt做界面，用python的threading库创建工作线程，在工作线程中需要完成一系列的任务，当每个部分完成后，需要和界面进行交互，如最简单的处理进度和当前步骤结果信息的在界面上的输出。而本文主要是总结以下，怎样在工作线程中控制界面的显示或控件设置问题。</p>
-<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>解决方案有如下几种：</p>
-<ol>
-<li><p>在线程中获取，界面窗体对象进行直接操作</p>
-<p>这是最简单直接的方法，这个方案的关键在于窗体对象的获取，我们可以有多种方法来获取窗体对象：</p>
-<ul>
-<li>通过全局变量传递</li>
-<li>将线程的回调函数设为有参数的，创建时通过窗体对象作为参数传递进去</li>
-<li>通过对操作系统的API调用，来查找需要的窗口对象（在python中没有实验过）</li>
-</ul>
-<p>当获得了窗体对象后，就可以任意调用其中的成员函数和成员变量了。但是当我使用PyQt5的的时候，这种方法时有问题的。</p>
-<p>通过获取的窗体对象，读取或者改写与界面无关的成员时，没有问题；但是一旦涉及到UI控件的一些写操作时久有可能出问题，如：在工作线程使用QTextEdit的setText()函数里面改变QTextEdit控件的显示文字时，程序会卡死。不过这里说的是可能，使用诸如改变窗口的setWindowTitle()设置窗口名称、改变QLabel的文字、改变QLineEdit的内容，都没有出现问题。</p>
-<p>后面到网上搜索，发现QT文档上是不允许这样跨线程修改UI控件这样的操作的，所以我觉得这种方法可以用来获取窗口类成员的值比较合适，如果要对界面做修改则需要考虑其他办法。</p>
-</li>
-<li><p>使用通过发送信号实现</p>
-<p>由于在工作线程中直接操作界面控件可能会出现一些问题，所以比较标准的做法是通过发送信号来实现通信。</p>
-<p>在MFC中可以先自定义消息，然后用sendmessage或postmessage来将消息发送给对应的界面窗体。而在Qt中则可以使用信号与槽机制来实现。实现方法如下：</p>
-<ul>
-<li>第一步，导入QObject模块和pyqtSignal函数</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PyQt.QtCore <span class="keyword">import</span> QObject</span><br></pre></td></tr></table></figure>
-<ul>
-<li>第二步，创建一个继承与QObject的类，其成员为信号，通过使用pyqtSignal函数来创建自定义信号</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UpdataUI</span><span class="params">(QObject)</span>:</span></span><br><span class="line">    UpdateTextSignal = pyqtSignal(str)</span><br><span class="line">    UpdateResultSignal = pyqtSignal(str, str)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>第三步，实例化信号类，将信号connnect到界面操作函数作为的槽，如下代码initUserSignal函数的参数是传入的窗体类对象</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initUserSignal</span><span class="params">(wnd)</span>:</span></span><br><span class="line">    update = UpdataUI()</span><br><span class="line">    update.UpdateTextSignal.connect(wnd.appendText)</span><br><span class="line">    update.UpdateResultSignal.connect(wnd.setTestResult)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>第四步，在需要使用槽函数的地方发送其连接的消息</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">update.UpdateTextSignal.emit(<span class="string">'\nRun: OK'</span>)</span><br><span class="line">update.UpdateResultSignal.emit(<span class="string">'True'</span>, <span class="string">'\nCheak MD5: OK'</span>)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2017/01/04/python工作线程与界面的交互/" data-id="cjijxih38002a3gvdoejqy7bn" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/01/08/机器学习——梯度下降算法的理解/" data-id="cjijxp87f004it4vd8nk08wwu" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -2083,6 +2060,25 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/06/18/全卷积神经网络FCN介绍/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/06/18/全卷积神经网络FCN介绍/" class="title">全卷积神经网络FCN介绍</a></p>
+                            <p class="item-date"><time datetime="2018-06-18T07:21:16.000Z" itemprop="datePublished">2018-06-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/06/18/对极几何的理解/" class="thumbnail">
     
     
@@ -2156,25 +2152,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/05/19/JupyterNotebook使用技巧/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/markdownImage/Nbextensions.jpg)" alt="Jupyter Notebook使用技巧" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/开发工具环境/">开发工具环境</a></p>
-                            <p class="item-title"><a href="/2018/05/19/JupyterNotebook使用技巧/" class="title">Jupyter Notebook使用技巧</a></p>
-                            <p class="item-date"><time datetime="2018-05-19T07:23:05.000Z" itemprop="datePublished">2018-05-19</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -2193,7 +2170,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
         </div>
     </div>
 
