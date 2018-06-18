@@ -154,11 +154,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                67
+                69
                 <span>posts</span>
             </div>
             <div class="article-info-block">
-                87
+                90
                 <span>tags</span>
             </div>
         </div>
@@ -207,6 +207,343 @@
 
             
             <section id="main">
+    <article id="post-图像与视频处理——图像修复简介" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2016/09/02/图像与视频处理——图像修复简介/">图像与视频处理——图像修复简介</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/09/02/图像与视频处理——图像修复简介/">
+            <time datetime="2016-09-02T14:09:19.000Z" itemprop="datePublished">2016-09-02</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/图像处理/">图像处理</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/MOOC/">MOOC</a>, <a class="tag-link" href="/tags/图像处理/">图像处理</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="图像修复原理和大致流程"><a href="#图像修复原理和大致流程" class="headerlink" title="图像修复原理和大致流程"></a>图像修复原理和大致流程</h4><p>如下图所示，为从原始图像到被破坏再到被修复的整个流程的模型框图：</p>
+<p><img src="/markdownImage/imageRestoration.jpg" alt="图1 Image Restoration"></p>
+<p>上图，原始图像f(x,y)，经过退化函数H，然后又叠加入了噪声成为被破坏后的图像g(x,y)，图像修复的目的找出对应的处理滤波器，尽量的还原原始图像f(x,y)。</p>
+<p>原始图像退化的原因可能有：拍摄时没有对焦，运动产生的模糊。噪声加入的原因也能够使多方面的，有可能是拍摄设备本身的电磁噪声。因此从f(x,y)到g(x,y)可以写成如下表达式：</p>
+<pre><code>g(x, y) = f(x,y) * h(x, y) + n(x, y)
+
+
+</code></pre><p><em>注意：1. f(x,y)与H(x,y)是卷积的操作  2. 噪声大多数都是加性噪声，如果有少量的乘性噪声，其处理方法也可以将其转换为家性噪声，然后以加性噪声的方法来处理</em></p>
+<p>由于我知道了图像破坏的模型后，图像的修复就是其逆过程，我们如果可以知道了H(x,y)和n(x,y)，就可以反推得到原始图像f(x,y)。</p>
+<h4 id="噪声模型"><a href="#噪声模型" class="headerlink" title="噪声模型"></a>噪声模型</h4><p>为了方便研究H(x,y)和n(x,y)，研究者们总结出了一些常用的噪声模型，这些噪声模型既包含了理论的模型也含有实际出现的噪声，可以方便大家套用和简化计算。我这里只是简单介绍其特性，其函数表达式以及详细分析可以参考其他专业资料。</p>
+<p>以下为6种常用的噪声模型的函数曲线图。</p>
+<p><img src="/markdownImage/noises.JPG" alt="图2 常用的噪声模型"></p>
+<ol>
+<li><p>高斯噪声（Gaussian）</p>
+<p>如上图所示第一条曲线为高斯噪声。高斯噪声是一种理想的模型，服从正太分布，在实际情况中不会出现，但是高斯噪声使用确实非常广泛的，其原因之一是数学上很好计算，其次它是其他噪声很好的近似。 </p>
+</li>
+<li><p>瑞利噪声（Rayleigh）</p>
+<p>上图中第二条曲线为瑞利噪声，是在实际中存在的噪声，比如磁共振。</p>
+</li>
+<li><p>伽马噪声</p>
+<p>上图第三条曲线为伽马噪声。</p>
+</li>
+<li><p>指数噪声</p>
+<p>上图第四条曲线为指数噪声，起一个重要的特征是没有负噪声。当图像做预测编码是导致的误差是指数噪声。</p>
+</li>
+<li><p>均匀噪声</p>
+<p>上图第五条曲线为均匀噪声，当图像做量化时导致的量化噪声就是均匀噪声。</p>
+</li>
+<li><p>脉冲噪声</p>
+<p>上图中的最后一条曲线为脉冲噪声，椒盐噪声就是属于脉冲噪声的类型。</p>
+</li>
+</ol>
+<p>这里有网友总结的各个噪声模型的表达式和Matlab代码可供参考：<a href="http://www.myexception.cn/image/1709093.html" target="_blank" rel="noopener">http://www.myexception.cn/image/1709093.html</a></p>
+<h4 id="图像噪声类型的评估"><a href="#图像噪声类型的评估" class="headerlink" title="图像噪声类型的评估"></a>图像噪声类型的评估</h4><p>图像加入噪声后的图像的直方图分布会受到噪声的影响，直方图的分布会变得和其加入的噪声的分布类似，因此我们可以通过检测图像的直方图来评估噪声类型。</p>
+<p>实际操作时，我们为了让直方图更明显，先取图像中颜色变化较小的一小块区域来做直方图，这样一来，直方图的形状就主要受其噪声类型的影响。但是如果整个图像噪声分布不是均匀的，那就可能要在不同位置多取几个区域检测了。</p>
+<p><img src="/markdownImage/noiseHist.jpg" alt="图3 图像噪声类型的评估"></p>
+<p>如上图，最坐标的原始图像，取蓝色框中的区域得到其直方图，因此可以很直接的看出：最左边的直方图是高斯噪声，中间是瑞利噪声，最右边的是均匀噪声。</p>
+<p>另外，如果直方图从肉眼不能直观的区分噪声类型，那么可以通过一一猜测的办法，通过用标准的工具做函数拟合，看看那种类型拟合出来的误差小。</p>
+<h4 id="噪声的处理"><a href="#噪声的处理" class="headerlink" title="噪声的处理"></a>噪声的处理</h4><p>从前面图像破坏的模型表达式可以看到，一般的噪声都是加性的噪声，而通过前面的噪声评估我们可以得到噪声的类型，图像修复是要去除噪声，就可以做逆向操作：</p>
+<pre><code>g(x, y) - n(x, y)
+
+
+</code></pre><h4 id="退化函数的评估"><a href="#退化函数的评估" class="headerlink" title="退化函数的评估"></a>退化函数的评估</h4><p>通常退化函数也被称为模糊函数，前面提过主要是两种情况：拍摄时没有对焦，运动产生的模糊。</p>
+<p>评估退化函数比较困难，有时候会需要一些实验和尝试。一般拍摄失焦的情况与高斯模糊比较类似，可以用高斯模糊来模拟。运动运动模糊，则可以理解为运动图像在时间上的积分。</p>
+<h4 id="退化函数的处理"><a href="#退化函数的处理" class="headerlink" title="退化函数的处理"></a>退化函数的处理</h4><p>退化函数对原始图像是卷积的作用，图像修复为了去除退化函数的影响，通常的操作是利用傅里叶变换。</p>
+<p>假定噪声已经去除，则原始图像被破坏的表达式为：</p>
+<pre><code>g(x, y) = f(x, y) * h(x, y)
+
+
+</code></pre><p>对上式做傅里叶变换(注意下式的x是乘号)：</p>
+<pre><code>G(u, v) = F(u, v) x H(u, v)
+
+
+</code></pre><p>这样操作后表达式就从卷积运算变成了乘法操作，得到：</p>
+<pre><code>F(u, v) = G(u, v) / H(u, v)
+
+
+</code></pre><p>最后再做傅里叶逆运算。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2016/09/02/图像与视频处理——图像修复简介/" data-id="cjijxih3x00343gvdqh44wumm" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-用Python-OpenCV进行图像梯度操作" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2016/08/30/用Python-OpenCV进行图像梯度操作/">用Python+OpenCV进行图像梯度操作</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/08/30/用Python-OpenCV进行图像梯度操作/">
+            <time datetime="2016-08-30T14:33:09.000Z" itemprop="datePublished">2016-08-30</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/图像处理/">图像处理</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/MOOC/">MOOC</a>, <a class="tag-link" href="/tags/openCV/">openCV</a>, <a class="tag-link" href="/tags/python/">python</a>, <a class="tag-link" href="/tags/图像处理/">图像处理</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h4 id="图像的梯度"><a href="#图像的梯度" class="headerlink" title="图像的梯度"></a>图像的梯度</h4><p>对于梯度，首先要了解的是他是一个向量，所以它是既有 <strong>方向</strong>又有 <strong>大小</strong>的物理量。</p>
+<p>对于二维图像的梯度，它的物理意义是：<em>图像上各个pixel点灰度变化大小的衡量</em>。图像梯度的最重要性质是，梯度的方向在图像灰度最大变化率上，它恰好可以反映出图像边缘上的灰度变化。</p>
+<p>由于现在的数码图像都是离散数字量，所以图像的梯度可以通过对其两个方向上分别求导来获得，一般最简单的计算方法可以如下（当然还有其他更复杂的求法）：</p>
+<pre><code>G(x,y) = dx i + dy j; 
+dx(i,j) = I(i+1,j) - I(i,j); 
+dy(i,j) = I(i,j+1) - I(i,j); 
+
+
+</code></pre><h4 id="Sobel算子"><a href="#Sobel算子" class="headerlink" title="Sobel算子"></a>Sobel算子</h4><p>sobel算子中文名为索贝尔算子，是图像的一阶梯度算子，它的主要作用是对图像做边缘检测。对于一个3x3的矩形框内，soble算子的计算公式为：</p>
+<p><img src="/markdownImage/2.png" alt="3x3矩形框"></p>
+<pre><code>Gy = (P7+2*P8+P9)-(P1+2*P2+P3)
+Gx = (P7+2*P8+P9)-(P1+2*P2+P3)
+|G| = |Gx| +|Gy|
+
+
+</code></pre><p>sobel算子对比普通的一阶求导方法会复杂些，从单向计算变成了双向计算，从一条线上的计算变成了一个面上的计算，这样可以认为是一种差分操作，因此它的抗噪声能力是更好的。</p>
+<p>对sobel算子的理解，有网友做比较好的总结：<a href="http://blog.csdn.net/yanmy2012/article/details/8110316" target="_blank" rel="noopener">http://blog.csdn.net/yanmy2012/article/details/8110316</a></p>
+<p>用python+openCV代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outimg = cv2.Sobel(img_gray,cv2.CV_64F,<span class="number">0</span>,<span class="number">1</span>,ksize=<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>测试图片结果如下：</p>
+<p><img src="/markdownImage/sobel.jpg" alt="sobel算子"></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2016/08/30/用Python-OpenCV进行图像梯度操作/" data-id="cjijxih5000533gvd2jm53oe1" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -303,7 +640,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/08/13/图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作/" data-id="cjhn4kp0f0045hovdpjrk6g5u" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/08/13/图像与视频处理——图像的模糊、去噪和增强及其OpenCV操作/" data-id="cjijxih4a003p3gvd4aq80a40" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -482,7 +819,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/08/12/用Python+OpenCV进行图像处理基本操作/" data-id="cjhn4kp0v004whovd08g9kfv5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/08/12/用Python+OpenCV进行图像处理基本操作/" data-id="cjijxih4x004w3gvdi6yx2uqa" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -650,7 +987,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/08/09/用Python实现图像直方图的均衡和匹配/" data-id="cjhn4kp0t004shovdtcevnhmw" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/08/09/用Python实现图像直方图的均衡和匹配/" data-id="cjijxih4v004s3gvda417sq1q" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -811,7 +1148,7 @@ g(s1) ----&gt; F2(x1)
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/08/09/图像与视频处理——直方图均衡和匹配/" data-id="cjhn4kozz003fhovdceuash0x" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/08/09/图像与视频处理——直方图均衡和匹配/" data-id="cjijxih4d003u3gvdjn69qoan" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1002,7 +1339,7 @@ web2.0爬虫的支持。
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/08/04/用Scrapy框架做网页爬虫/" data-id="cjhn4kp0y0052hovd48dc6l1q" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/08/04/用Scrapy框架做网页爬虫/" data-id="cjijxih5100563gvdh09hbx9y" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1188,7 +1525,7 @@ web2.0爬虫的支持。
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/06/29/用Python对图像进行简单的操作-利用PIL库/" data-id="cjhn4kp0x004zhovdeemssi9c" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/06/29/用Python对图像进行简单的操作-利用PIL库/" data-id="cjijxih4r004k3gvdwx12m7hg" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1327,7 +1664,7 @@ web2.0爬虫的支持。
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/06/28/图像与视频处理——图像的基本操作/" data-id="cjhn4kp00003ihovdahrqg7rj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/06/28/图像与视频处理——图像的基本操作/" data-id="cjijxih47003m3gvdd94htklf" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1481,335 +1818,7 @@ web2.0爬虫的支持。
 
 </div>
 
-    <a data-url="http://yoursite.com/2016/06/23/图像与视频处理——图像的采集/" data-id="cjhn4kp02003mhovd5qcuoqt6" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-图像与视频处理——人体视觉系统" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2016/06/23/图像与视频处理——人体视觉系统/">图像与视频处理——人体视觉系统(human visual system)</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2016/06/23/图像与视频处理——人体视觉系统/">
-            <time datetime="2016-06-23T04:51:31.000Z" itemprop="datePublished">2016-06-23</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/图像处理/">图像处理</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/MOOC/">MOOC</a>, <a class="tag-link" href="/tags/human-visual-system/">human visual system</a>, <a class="tag-link" href="/tags/图像处理/">图像处理</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>人体视觉系统（human visual system）是《Image and Vidio Processing》课程中最先介绍的内容，可以算作为这门课程的背景知识。在课程的视屏教程中仅仅用了不到20分钟的时间就完成了这部份的内容，但是实际上要深入理解人体视觉系统是远不止如此的。</p>
-<p>尽管在这门课程只是作为背景知识来介绍，但是这部分却是我在第一次学习中印象最深的内容。它给带来的作用并不仅仅是加深对这门课程的理解，更是直接向我解释了现实生活中那些曾经让我困惑的一些视觉问题，对我理解摄影技术提供极大的帮助。</p>
-<h4 id="人体视觉系统组成"><a href="#人体视觉系统组成" class="headerlink" title="人体视觉系统组成"></a>人体视觉系统组成</h4><p>人体视觉系统的组成是很复杂的，站在本课程的角度我无法也没有必要从生物学上系统学习学习，所以这里仅仅关注其组成的关键器官及关键部位——<strong>眼睛和视网膜上的两种视觉细胞</strong>。</p>
-<p>如下图是我在课程的视屏中截下的人眼简单的构造图：</p>
-<p><img src="/markdownImage/human_visual_system1.PNG" alt="人眼视觉组成"></p>
-<p>红色标记的是视网膜Retina，绿色部分都是属于视网膜区域。在视网膜上布满了是视觉细胞，外面的光线经过晶状体投射到视网膜上，由视网膜上的视觉细胞感应光信号。</p>
-<p>在这里视网膜上的视觉细胞就作为光线传感器的作用，它们可以分为两类：</p>
-<ol>
-<li><p>cones(圆锥细胞)</p>
-<p>cones集中在视网膜的中心地方，在上图中就是fovca的地方，中心区外分布很少。cones擅长分辨物体细节，对光线有很大的灵敏度。</p>
-<p>另外cones除了能感受光强外，还能感受颜色。</p>
-</li>
-<li><p>rods(杆状细胞)</p>
-<p>rods在视网膜上分布较广，它不能感受颜色，不擅长区分细节，但是擅长感受景物的轮廓，且在微光下表现良好。</p>
-</li>
-</ol>
-<p>这两种细胞相互补充，协同工作。理解产生人体视觉的这两类细胞的各自的特点，是非常重要的，能够帮助我们解释很多生活中的视觉现象。如：</p>
-<ul>
-<li>由于cones只集中在视网膜中心部位，所以为看清物体，人总是需要调整的眼睛位置移动眼珠，使被关注的物体能够投射到视网膜的中心</li>
-<li>暗光下能够能够看清物体缺区分不了颜色，因为暗光下的视觉成相主要是rods的作用</li>
-</ul>
-<p>我们后面图像处理很多都是将人眼不能区分或是难以区分的图像处理到满足人眼视觉特性使人眼更容易感知的图片。</p>
-<h4 id="人体的视觉特性"><a href="#人体的视觉特性" class="headerlink" title="人体的视觉特性"></a>人体的视觉特性</h4><ul>
-<li>人眼对光的适应范围</li>
-</ul>
-<p>人眼对光线的适应范围应该分两个角度来看：一面是光波的波长或频率，第二是光的强度。</p>
-<ol>
-<li><p>光波的波长或频率</p>
-<p>在电磁波中，人眼能识别的部分被称为可见光，可见光在波长在整个光谱中只是很小的一部分，一般人眼识别的波长范围在400~760nm之间。如下图为我在Wiki中找到的电磁波频谱图，可以看到人眼能识别的部分非常小：</p>
-<p><img src="/markdownImage/human_visual_system2.png" alt="电磁波的频谱图"></p>
-<p>尽管人眼识别的可见光在光谱中很小，但是实际上利用其他感光传感器是可以采集到更广范围的光线的，并将这些光线生成图像。另外通过这些传感器生成的图像数据转换到可见光的范围内，就可以形成人眼可见的图像了。</p>
-</li>
-<li><p>光的强度</p>
-<p>过强或过弱的光线，会超出人眼的识别范围而导致无法识别物体。不过相对来说人眼能够识别的光强范围还是比较广的，但是这个广的适应范围是靠人眼的 <strong>动态调节</strong>来实现的。</p>
-<p>人眼的动态调节，是指人体的视觉系统会根据环境的光强，来改变视觉细胞的灵敏度，从而能够更好的观察物体的细节。所以我们是不能在既有情况又有弱光的环境中同时看清强光部分和弱光部分的细节。</p>
-<p>动态调节是需要时间的，所以当我们从忽然从黑暗的环境走到很亮的环境中，或者从很亮的环境中走到黑暗的环境中的时候，我们总是需要花上一点点时间才能看清周围的东西。</p>
-<p>从这点来看，现在相机和人体的视觉系统是很相似的地方的。实际我自己的感觉是相机在同一时刻能够适应的光强范围比人眼更差。特别是当我们拍摄光强差异较大的环境的时候，高光部分就饱和，暗光部分就一片黑。</p>
-<p>相机为了适应更广的光强范围（不在同一时刻），可以通过改变光圈大小或快门时间来调节相机的曝光补偿。而现在的大多数相机都有自动挡，通过检测所拍摄环境的光线，来自动调节曝光补偿参数。</p>
-</li>
-</ol>
-<ul>
-<li><p>韦伯法则——人眼对高光区域有更好的灵敏度</p>
-<p>韦伯法则是用来说明人眼对光强改变灵敏程度的。它告诉我们，人眼对光线改变的敏感程度是非线性的。在明亮的环境下，小的光强改变都可以被人眼感受到；但是在昏暗的环境中，则需要光强有更大的改变才能被人察觉。</p>
-<p>实际上从上面人体视觉的两种视觉细胞的特点就可以反应这一点点现象，cones具有高敏感度、高分辨率，但那时需要比较明亮的条件下才能正常工作，所以亮光下，人眼的分辨率会更高。</p>
-<p>所以从图像来看也是这样的，如果我们希望我们的眼睛能够更清除的区分图像的细节，我们需要把照片调亮，这样对我们观察会更有利。</p>
-</li>
-<li><p>马赫带——人眼对物体轮廓的强调</p>
-<p>这是1868年奥地利物理学家 E. 马赫发现的一种明度对比的视觉效应。是一种主观的边缘对比效应。当观察两块亮度不同的区域时，边界处亮度对比加强，使轮廓表现得特别明显。</p>
-<p>通俗的讲究是明暗交接处，暗的一边在人眼看来会更暗，亮的那一边在人眼看来会更亮。</p>
-</li>
-<li><p>其他的一些视觉错觉现象</p>
-<p>如下图，亮度一样的方块，放在不同的环境中人会亮度是不同的：</p>
-<p><img src="/markdownImage/human_visual_system3.png" alt="人眼对亮度的判断与环境有关"></p>
-<p>再如下面这些图，体现了人眼有补全轮廓趋势、易受环境误导的现象：</p>
-<p><img src="/markdownImage/human_visual_system4.png" alt="视觉错觉现象"></p>
-</li>
-</ul>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2016/06/23/图像与视频处理——人体视觉系统/" data-id="cjhn4kozy003chovd8yugj40c" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-图像与视频处理——前言" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2016/06/18/图像与视频处理——前言/">图像与视屏处理——前言</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2016/06/18/图像与视频处理——前言/">
-            <time datetime="2016-06-18T07:43:42.000Z" itemprop="datePublished">2016-06-18</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/图像处理/">图像处理</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/MOOC/">MOOC</a>, <a class="tag-link" href="/tags/图像处理/">图像处理</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p>图像与视屏处理为Coursera上杜克大学提供的<a href="https://www.coursera.org/" target="_blank" rel="noopener">MOOC</a>课程，原名为： <strong>《Image and Vidio Processing: From Mars to Hollywood with a stop at Hospital》</strong>。课程时间较长，一共9周，内容也很系统、丰富，是学习图像处理的一个不错的选择。</p>
-<p>但是由于很可惜，当时候我刚刚接触MOOC，完全没有考虑到了学习的难度，竟然在明知道个人时间有限的情况下同时报了两三课程。结果可想而知，随着课程的深入，学习起来越来越吃力，特别是《图像与视屏处理》这门课程，将所有的工作之余的时间都用上也只能很牵强的跟上课程的节奏。到后来工作开始变繁忙后，我也不得不放弃了这些课程，随着课程的结束，很多课程的页面也找不到了。</p>
-<p>不过最近非常惊奇的发现，当初已经加入的那些课程的教学视屏用手机客户端中仍然是可以找到的，只是课后作业习题和考试页面已经无法使用了。所以当初那些没有完成的课程，我希望能继续，乘现在空闲时间还比较多的时候。于是从《图像与视屏处理》这门课程开始。</p>
-<p>重新学习，自然需要吸取前面的教训。</p>
-<ol>
-<li><p>重视课程。 </p>
-<p>说实话前面学习时好奇心过于旺盛、心态上有点浮躁。课程简单的时候迫切的想看后面的章节，课程复杂的时候，又没有耐心的去思考。</p>
-</li>
-<li><p>注重理解。 </p>
-<p>由于没有课后习题的练习，所以要加深所学知识的理解只能靠自己思考了。我现在想到的就是，学完一部分内容，整理后发布在Blog上。</p>
-<p>其实前面学习的时候也做过记录，但是当时仅仅是将视屏讲解的内容原原本本的抄下来没有经过自己的整理，这是远远不够的。现在的话，我希望按照自己的理解的思路来写，不求面面俱到（因为交涉的知识点太多面面俱到是不可能的），但是需要有轻重详略，且内容结构不完全和课程一样，以自己的思路为主，我会将我认为的重点以及我理解得很透彻的点解释的更详细些。</p>
-</li>
-</ol>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2016/06/18/图像与视频处理——前言/" data-id="cjhn4kozr002whovdu008kxzg" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2016/06/23/图像与视频处理——图像的采集/" data-id="cjijxih4i00423gvd4tq1xyoa" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1902,6 +1911,44 @@ web2.0爬虫的支持。
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/06/18/对极几何的理解/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/06/18/对极几何的理解/" class="title">对极几何的理解.md</a></p>
+                            <p class="item-date"><time datetime="2018-06-18T07:09:31.000Z" itemprop="datePublished">2018-06-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/06/18/对极几何的理解-md/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/markdownImage/epipolar.png)" alt="对极几何的理解" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/机器视觉/">机器视觉</a></p>
+                            <p class="item-title"><a href="/2018/06/18/对极几何的理解-md/" class="title">对极几何的理解</a></p>
+                            <p class="item-date"><time datetime="2018-06-18T07:09:31.000Z" itemprop="datePublished">2018-06-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/05/26/SpatialTransformerNetwork了解/" class="thumbnail">
     
     
@@ -1956,44 +2003,6 @@ web2.0爬虫的支持。
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/05/19/一个简单数据管理python项目教程/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/Qt/">Qt</a></p>
-                            <p class="item-title"><a href="/2018/05/19/一个简单数据管理python项目教程/" class="title">一个简单数据管理python项目教程</a></p>
-                            <p class="item-date"><time datetime="2018-05-19T02:34:38.000Z" itemprop="datePublished">2018-05-19</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/05/05/cython介绍/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/开发工具环境/">开发工具环境</a></p>
-                            <p class="item-title"><a href="/2018/05/05/cython介绍/" class="title">cython介绍</a></p>
-                            <p class="item-date"><time datetime="2018-05-05T15:05:16.000Z" itemprop="datePublished">2018-05-05</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -2003,7 +2012,7 @@ web2.0爬虫的支持。
     <div class="widget-wrap">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">62</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/3D技术/">3D技术</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/OpenNI/">OpenNI</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/Qt/">Qt</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/SLAM/">SLAM</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/WPF/">WPF</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/hexo/">hexo</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/web-spider/">web spider</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/图像处理/">图像处理</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/多线程-多进程/">多线程/多进程</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/嵌入式/">嵌入式</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/开发工具环境/">开发工具环境</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/数据可视化/">数据可视化</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/机器学习/">机器学习</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/机器视觉/">机器视觉</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/深度学习/">深度学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/算法/">算法</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/虚拟现实/">虚拟现实</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂谈/">杂谈</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/杂谈/Minecraft/">Minecraft</a><span class="category-list-count">1</span></li></ul></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">63</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/3D技术/">3D技术</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/OpenNI/">OpenNI</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/Qt/">Qt</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/SLAM/">SLAM</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/WPF/">WPF</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/hexo/">hexo</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/web-spider/">web spider</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/图像处理/">图像处理</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/多线程-多进程/">多线程/多进程</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/嵌入式/">嵌入式</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/开发工具环境/">开发工具环境</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/数据可视化/">数据可视化</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/机器学习/">机器学习</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/机器视觉/">机器视觉</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/深度学习/">深度学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/算法/">算法</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/虚拟现实/">虚拟现实</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂谈/">杂谈</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/杂谈/Minecraft/">Minecraft</a><span class="category-list-count">1</span></li></ul></li></ul>
         </div>
     </div>
 
@@ -2012,7 +2021,7 @@ web2.0爬虫的支持。
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
         </div>
     </div>
 
@@ -2021,7 +2030,7 @@ web2.0爬虫的支持。
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/3D深度传感器/">3D深度传感器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AR/">AR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C#</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/InnoDB/">InnoDB</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MIZ702N/">MIZ702N</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MOOC/">MOOC</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Minecraft/">Minecraft</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenCV/">OpenCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenNI/">OpenNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PIL/">PIL</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyQt/">PyQt</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt/">Qt</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt-Designer/">Qt Designer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SLAM/">SLAM</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STN/">STN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spatial-Transformer-Network/">Spatial Transformer Network</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity3D/">Unity3D</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VR/">VR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VS/">VS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WPF/">WPF</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/XAMPP/">XAMPP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZYNQ7000/">ZYNQ7000</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anaconda/">anaconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arm-liunx-gcc/">arm-liunx-gcc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/">cmake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/conda/">conda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cython/">cython</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep learning</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gluon/">gluon</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/human-visual-system/">human visual system</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jupyter/">jupyter</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k邻近算法/">k邻近算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/matplotlib/">matplotlib</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mxnet/">mxnet</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/numpy/">numpy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openCV/">openCV</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencv/">opencv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpMyAdmin/">phpMyAdmin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyinstaller/">pyinstaller</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyqt/">pyqt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sublime/">sublime</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swig/">swig</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-spider/">web spider</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/决策树/">决策树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/双目视觉/">双目视觉</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像处理/">图像处理</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像特征点/">图像特征点</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/学习总结/">学习总结</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/嵌入式/">嵌入式</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/张氏标定/">张氏标定</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索算法/">搜索算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摄像头/">摄像头</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/最大公约数/">最大公约数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/最短路径/">最短路径</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器视觉/">机器视觉</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/梯度下降算法/">梯度下降算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率论/">概率论</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/欧几里德算法/">欧几里德算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/直方图/">直方图</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机标定/">相机标定</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机模型/">相机模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/神经网络/">神经网络</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间变换/">空间变换</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/蒙特卡洛算法/">蒙特卡洛算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件设计/">软件设计</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/驱动开发/">驱动开发</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/3D深度传感器/">3D深度传感器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AR/">AR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C#</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/InnoDB/">InnoDB</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MIZ702N/">MIZ702N</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MOOC/">MOOC</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Minecraft/">Minecraft</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenCV/">OpenCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenNI/">OpenNI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PIL/">PIL</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PyQt/">PyQt</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt/">Qt</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt-Designer/">Qt Designer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SLAM/">SLAM</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STN/">STN</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spatial-Transformer-Network/">Spatial Transformer Network</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Unity3D/">Unity3D</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VR/">VR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VS/">VS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WPF/">WPF</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/XAMPP/">XAMPP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZYNQ7000/">ZYNQ7000</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anaconda/">anaconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arm-liunx-gcc/">arm-liunx-gcc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/">cmake</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/conda/">conda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cython/">cython</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deep-learning/">deep learning</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gluon/">gluon</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/human-visual-system/">human visual system</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jupyter/">jupyter</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k邻近算法/">k邻近算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/matplotlib/">matplotlib</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mxnet/">mxnet</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/numpy/">numpy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openCV/">openCV</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencv/">opencv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpMyAdmin/">phpMyAdmin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyinstaller/">pyinstaller</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyqt/">pyqt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sublime/">sublime</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swig/">swig</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-spider/">web spider</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/决策树/">决策树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/双目视觉/">双目视觉</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像处理/">图像处理</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像特征点/">图像特征点</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础矩阵/">基础矩阵</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/学习总结/">学习总结</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对极几何/">对极几何</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/嵌入式/">嵌入式</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/张氏标定/">张氏标定</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索算法/">搜索算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摄像头/">摄像头</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/最大公约数/">最大公约数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/最短路径/">最短路径</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本质矩阵/">本质矩阵</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器视觉/">机器视觉</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/梯度下降算法/">梯度下降算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/概率论/">概率论</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/欧几里德算法/">欧几里德算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏/">游戏</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/直方图/">直方图</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机标定/">相机标定</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/相机模型/">相机模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/神经网络/">神经网络</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间变换/">空间变换</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/蒙特卡洛算法/">蒙特卡洛算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调试/">调试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件设计/">软件设计</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/驱动开发/">驱动开发</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -2030,7 +2039,7 @@ web2.0爬虫的支持。
     <div class="widget-wrap">
         <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
-            <a href="/tags/3D深度传感器/" style="font-size: 10px;">3D深度传感器</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AR/" style="font-size: 10px;">AR</a> <a href="/tags/C/" style="font-size: 11.43px;">C#</a> <a href="/tags/C/" style="font-size: 12.86px;">C++</a> <a href="/tags/CSS/" style="font-size: 10px;">CSS</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/InnoDB/" style="font-size: 10px;">InnoDB</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/MIZ702N/" style="font-size: 12.86px;">MIZ702N</a> <a href="/tags/MOOC/" style="font-size: 18.57px;">MOOC</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/MySQL/" style="font-size: 15.71px;">MySQL</a> <a href="/tags/OpenCV/" style="font-size: 10px;">OpenCV</a> <a href="/tags/OpenNI/" style="font-size: 10px;">OpenNI</a> <a href="/tags/PIL/" style="font-size: 11.43px;">PIL</a> <a href="/tags/PyQt/" style="font-size: 11.43px;">PyQt</a> <a href="/tags/Qt/" style="font-size: 17.14px;">Qt</a> <a href="/tags/Qt-Designer/" style="font-size: 10px;">Qt Designer</a> <a href="/tags/SLAM/" style="font-size: 11.43px;">SLAM</a> <a href="/tags/STN/" style="font-size: 10px;">STN</a> <a href="/tags/Spatial-Transformer-Network/" style="font-size: 10px;">Spatial Transformer Network</a> <a href="/tags/Unity3D/" style="font-size: 11.43px;">Unity3D</a> <a href="/tags/VR/" style="font-size: 10px;">VR</a> <a href="/tags/VS/" style="font-size: 11.43px;">VS</a> <a href="/tags/WPF/" style="font-size: 11.43px;">WPF</a> <a href="/tags/XAMPP/" style="font-size: 10px;">XAMPP</a> <a href="/tags/ZYNQ7000/" style="font-size: 12.86px;">ZYNQ7000</a> <a href="/tags/anaconda/" style="font-size: 10px;">anaconda</a> <a href="/tags/arm-liunx-gcc/" style="font-size: 10px;">arm-liunx-gcc</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/conda/" style="font-size: 10px;">conda</a> <a href="/tags/cython/" style="font-size: 10px;">cython</a> <a href="/tags/deep-learning/" style="font-size: 14.29px;">deep learning</a> <a href="/tags/gluon/" style="font-size: 10px;">gluon</a> <a href="/tags/hexo/" style="font-size: 12.86px;">hexo</a> <a href="/tags/human-visual-system/" style="font-size: 10px;">human visual system</a> <a href="/tags/jupyter/" style="font-size: 12.86px;">jupyter</a> <a href="/tags/k邻近算法/" style="font-size: 10px;">k邻近算法</a> <a href="/tags/markdown/" style="font-size: 11.43px;">markdown</a> <a href="/tags/matplotlib/" style="font-size: 11.43px;">matplotlib</a> <a href="/tags/mxnet/" style="font-size: 11.43px;">mxnet</a> <a href="/tags/numpy/" style="font-size: 10px;">numpy</a> <a href="/tags/openCV/" style="font-size: 12.86px;">openCV</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/phpMyAdmin/" style="font-size: 10px;">phpMyAdmin</a> <a href="/tags/pip/" style="font-size: 10px;">pip</a> <a href="/tags/pyinstaller/" style="font-size: 10px;">pyinstaller</a> <a href="/tags/pyqt/" style="font-size: 10px;">pyqt</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/scrapy/" style="font-size: 10px;">scrapy</a> <a href="/tags/sublime/" style="font-size: 10px;">sublime</a> <a href="/tags/swig/" style="font-size: 10px;">swig</a> <a href="/tags/web-spider/" style="font-size: 11.43px;">web spider</a> <a href="/tags/xpath/" style="font-size: 10px;">xpath</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/博客/" style="font-size: 14.29px;">博客</a> <a href="/tags/双目视觉/" style="font-size: 12.86px;">双目视觉</a> <a href="/tags/图像处理/" style="font-size: 18.57px;">图像处理</a> <a href="/tags/图像特征点/" style="font-size: 10px;">图像特征点</a> <a href="/tags/多线程/" style="font-size: 11.43px;">多线程</a> <a href="/tags/学习总结/" style="font-size: 11.43px;">学习总结</a> <a href="/tags/嵌入式/" style="font-size: 15.71px;">嵌入式</a> <a href="/tags/张氏标定/" style="font-size: 11.43px;">张氏标定</a> <a href="/tags/搜索算法/" style="font-size: 10px;">搜索算法</a> <a href="/tags/摄像头/" style="font-size: 10px;">摄像头</a> <a href="/tags/最大公约数/" style="font-size: 10px;">最大公约数</a> <a href="/tags/最短路径/" style="font-size: 10px;">最短路径</a> <a href="/tags/机器学习/" style="font-size: 11.43px;">机器学习</a> <a href="/tags/机器视觉/" style="font-size: 14.29px;">机器视觉</a> <a href="/tags/树莓派/" style="font-size: 10px;">树莓派</a> <a href="/tags/梯度下降算法/" style="font-size: 10px;">梯度下降算法</a> <a href="/tags/概率论/" style="font-size: 10px;">概率论</a> <a href="/tags/欧几里德算法/" style="font-size: 10px;">欧几里德算法</a> <a href="/tags/游戏/" style="font-size: 12.86px;">游戏</a> <a href="/tags/直方图/" style="font-size: 11.43px;">直方图</a> <a href="/tags/相机标定/" style="font-size: 12.86px;">相机标定</a> <a href="/tags/相机模型/" style="font-size: 10px;">相机模型</a> <a href="/tags/神经网络/" style="font-size: 10px;">神经网络</a> <a href="/tags/空间变换/" style="font-size: 10px;">空间变换</a> <a href="/tags/蒙特卡洛算法/" style="font-size: 10px;">蒙特卡洛算法</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/调试/" style="font-size: 10px;">调试</a> <a href="/tags/软件设计/" style="font-size: 10px;">软件设计</a> <a href="/tags/驱动开发/" style="font-size: 10px;">驱动开发</a>
+            <a href="/tags/3D深度传感器/" style="font-size: 10px;">3D深度传感器</a> <a href="/tags/AI/" style="font-size: 10px;">AI</a> <a href="/tags/AR/" style="font-size: 10px;">AR</a> <a href="/tags/C/" style="font-size: 11.43px;">C#</a> <a href="/tags/C/" style="font-size: 12.86px;">C++</a> <a href="/tags/CSS/" style="font-size: 10px;">CSS</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/InnoDB/" style="font-size: 10px;">InnoDB</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/MIZ702N/" style="font-size: 12.86px;">MIZ702N</a> <a href="/tags/MOOC/" style="font-size: 18.57px;">MOOC</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/MySQL/" style="font-size: 15.71px;">MySQL</a> <a href="/tags/OpenCV/" style="font-size: 10px;">OpenCV</a> <a href="/tags/OpenNI/" style="font-size: 10px;">OpenNI</a> <a href="/tags/PIL/" style="font-size: 11.43px;">PIL</a> <a href="/tags/PyQt/" style="font-size: 11.43px;">PyQt</a> <a href="/tags/Qt/" style="font-size: 17.14px;">Qt</a> <a href="/tags/Qt-Designer/" style="font-size: 10px;">Qt Designer</a> <a href="/tags/SLAM/" style="font-size: 11.43px;">SLAM</a> <a href="/tags/STN/" style="font-size: 10px;">STN</a> <a href="/tags/Spatial-Transformer-Network/" style="font-size: 10px;">Spatial Transformer Network</a> <a href="/tags/Unity3D/" style="font-size: 11.43px;">Unity3D</a> <a href="/tags/VR/" style="font-size: 10px;">VR</a> <a href="/tags/VS/" style="font-size: 11.43px;">VS</a> <a href="/tags/WPF/" style="font-size: 11.43px;">WPF</a> <a href="/tags/XAMPP/" style="font-size: 10px;">XAMPP</a> <a href="/tags/ZYNQ7000/" style="font-size: 12.86px;">ZYNQ7000</a> <a href="/tags/anaconda/" style="font-size: 10px;">anaconda</a> <a href="/tags/arm-liunx-gcc/" style="font-size: 10px;">arm-liunx-gcc</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/conda/" style="font-size: 10px;">conda</a> <a href="/tags/cython/" style="font-size: 10px;">cython</a> <a href="/tags/deep-learning/" style="font-size: 14.29px;">deep learning</a> <a href="/tags/gluon/" style="font-size: 10px;">gluon</a> <a href="/tags/hexo/" style="font-size: 12.86px;">hexo</a> <a href="/tags/human-visual-system/" style="font-size: 10px;">human visual system</a> <a href="/tags/jupyter/" style="font-size: 12.86px;">jupyter</a> <a href="/tags/k邻近算法/" style="font-size: 10px;">k邻近算法</a> <a href="/tags/markdown/" style="font-size: 11.43px;">markdown</a> <a href="/tags/matplotlib/" style="font-size: 11.43px;">matplotlib</a> <a href="/tags/mxnet/" style="font-size: 11.43px;">mxnet</a> <a href="/tags/numpy/" style="font-size: 10px;">numpy</a> <a href="/tags/openCV/" style="font-size: 12.86px;">openCV</a> <a href="/tags/opencv/" style="font-size: 10px;">opencv</a> <a href="/tags/phpMyAdmin/" style="font-size: 10px;">phpMyAdmin</a> <a href="/tags/pip/" style="font-size: 10px;">pip</a> <a href="/tags/pyinstaller/" style="font-size: 10px;">pyinstaller</a> <a href="/tags/pyqt/" style="font-size: 10px;">pyqt</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/scrapy/" style="font-size: 10px;">scrapy</a> <a href="/tags/sublime/" style="font-size: 10px;">sublime</a> <a href="/tags/swig/" style="font-size: 10px;">swig</a> <a href="/tags/web-spider/" style="font-size: 11.43px;">web spider</a> <a href="/tags/xpath/" style="font-size: 10px;">xpath</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/博客/" style="font-size: 14.29px;">博客</a> <a href="/tags/双目视觉/" style="font-size: 14.29px;">双目视觉</a> <a href="/tags/图像处理/" style="font-size: 18.57px;">图像处理</a> <a href="/tags/图像特征点/" style="font-size: 10px;">图像特征点</a> <a href="/tags/基础矩阵/" style="font-size: 10px;">基础矩阵</a> <a href="/tags/多线程/" style="font-size: 11.43px;">多线程</a> <a href="/tags/学习总结/" style="font-size: 11.43px;">学习总结</a> <a href="/tags/对极几何/" style="font-size: 10px;">对极几何</a> <a href="/tags/嵌入式/" style="font-size: 15.71px;">嵌入式</a> <a href="/tags/张氏标定/" style="font-size: 11.43px;">张氏标定</a> <a href="/tags/搜索算法/" style="font-size: 10px;">搜索算法</a> <a href="/tags/摄像头/" style="font-size: 10px;">摄像头</a> <a href="/tags/最大公约数/" style="font-size: 10px;">最大公约数</a> <a href="/tags/最短路径/" style="font-size: 10px;">最短路径</a> <a href="/tags/本质矩阵/" style="font-size: 10px;">本质矩阵</a> <a href="/tags/机器学习/" style="font-size: 11.43px;">机器学习</a> <a href="/tags/机器视觉/" style="font-size: 15.71px;">机器视觉</a> <a href="/tags/树莓派/" style="font-size: 10px;">树莓派</a> <a href="/tags/梯度下降算法/" style="font-size: 10px;">梯度下降算法</a> <a href="/tags/概率论/" style="font-size: 10px;">概率论</a> <a href="/tags/欧几里德算法/" style="font-size: 10px;">欧几里德算法</a> <a href="/tags/游戏/" style="font-size: 12.86px;">游戏</a> <a href="/tags/直方图/" style="font-size: 11.43px;">直方图</a> <a href="/tags/相机标定/" style="font-size: 12.86px;">相机标定</a> <a href="/tags/相机模型/" style="font-size: 10px;">相机模型</a> <a href="/tags/神经网络/" style="font-size: 10px;">神经网络</a> <a href="/tags/空间变换/" style="font-size: 10px;">空间变换</a> <a href="/tags/蒙特卡洛算法/" style="font-size: 10px;">蒙特卡洛算法</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/调试/" style="font-size: 10px;">调试</a> <a href="/tags/软件设计/" style="font-size: 10px;">软件设计</a> <a href="/tags/驱动开发/" style="font-size: 10px;">驱动开发</a>
         </div>
     </div>
 
