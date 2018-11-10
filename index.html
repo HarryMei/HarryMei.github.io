@@ -207,6 +207,186 @@
 
             
             <section id="main">
+    <article id="post-numpy的基础操作1" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/11/10/numpy的基础操作1/">numpy的基础操作</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/11/10/numpy的基础操作1/">
+            <time datetime="2018-11-10T13:02:28.000Z" itemprop="datePublished">2018-11-10</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/开发工具环境/">开发工具环境</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/numpy/">numpy</a>, <a class="tag-link" href="/tags/python/">python</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="参考教程"><a href="#参考教程" class="headerlink" title="参考教程"></a>参考教程</h2><p>系列视频：<a href="https://www.bilibili.com/video/av11263377" target="_blank" rel="noopener">https://www.bilibili.com/video/av11263377</a></p>
+<p>本文的知识点将只包括numpy数据的基础使用方法，将会涉及到如下内容：</p>
+<ol>
+<li>numpy ndarry基本数组的生成</li>
+<li>数组深浅拷贝</li>
+<li>数组的基本形状改变</li>
+<li>指定维度上的计算</li>
+<li>不同shape也可以运算的操作</li>
+<li>数组的增删操作</li>
+<li>Mask array的一些特性</li>
+<li>小数数组打印的技巧</li>
+</ol>
+<p>不过本文是属于查漏补缺性质的，重点在那些容易忽略的地方，而那些大多数人都知道的部分就不会再细写了。</p>
+<h2 id="linspace函数的使用-数组初始化"><a href="#linspace函数的使用-数组初始化" class="headerlink" title="linspace函数的使用(数组初始化)"></a>linspace函数的使用(数组初始化)</h2><p>之前的工作中，创建numpy的数组我一直都习惯用arange、zeros、ones这几个函数，而对linspace这个函数却不是很熟悉。linspace与arange的作用有些相似，都能生成等间隔的数组，但是两者有如下区别：</p>
+<ol>
+<li>需要固定步长用arange，而需要固定生成数目的个数用linspace，因为linspace会自动计算步长，设置retstep参数可以返回计算的步长</li>
+<li>arange生成的数组不包endpoint的值，而linspace则包含</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.linspace(0, 15, 5, retstep=True)</span><br></pre></td></tr></table></figure>
+<h2 id="view和copy-浅拷贝与深拷贝"><a href="#view和copy-浅拷贝与深拷贝" class="headerlink" title="view和copy(浅拷贝与深拷贝)"></a>view和copy(浅拷贝与深拷贝)</h2><p>view时浅拷贝，copy时深拷贝，在我的一般使用中只用copy就可以满足了，不过其实view也有比较好的应用场景，如同一数组希望用<strong>不同维度</strong>或<strong>不同的类型</strong>的形式使用，下面代码，arr_v2是arr_v1的view，但是在使用Ⅹ不仅将其纬度改变了还将其元素类型也改变了，对arr_v2的修改会影响arr_v1：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arr_v1 = np.array([1,5,10,15,20,25])</span><br><span class="line">arr_v2 = arr_v1.view()</span><br><span class="line">arr_v2.shape = (2,3)</span><br><span class="line">arr_v2.dtype = np.int8</span><br><span class="line">arr_v2[2,2] =255</span><br></pre></td></tr></table></figure>
+<h2 id="修改reshape"><a href="#修改reshape" class="headerlink" title="修改reshape"></a>修改reshape</h2><h4 id="1-reshape"><a href="#1-reshape" class="headerlink" title="1. reshape"></a>1. reshape</h4><p>shape相关的函数最常用的就是reshape了，但是<em>注意：reshape函数是view而不是copy</em></p>
+<h4 id="2-ravel函数和flat属性"><a href="#2-ravel函数和flat属性" class="headerlink" title="2. ravel函数和flat属性"></a>2. ravel函数和flat属性</h4><p>ravel将多维数组转为一个一维数组, flat属性则提供是一个迭代器顺序读取数组，使用代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># ravel</span><br><span class="line">orig_arr = np.arange(12).reshape(2,2,3)</span><br><span class="line">new_arr = orig_arr.ravel()</span><br><span class="line"># flat</span><br><span class="line">for i in orig_arr.flat:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
+<h2 id="指定操作的维度"><a href="#指定操作的维度" class="headerlink" title="指定操作的维度"></a>指定操作的维度</h2><p>默认的sum、mean等操作是对数组中所有的元素进行对应的计算，如果只希望在某一个维度上或者几个维度上操作则需要设置其axis参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arr1 = np.arange(12).reshape((2,2,3))</span><br><span class="line">print(arr1.mean())</span><br><span class="line">print(arr1.mean(axis=0))</span><br><span class="line">print(arr1.mean(axis=(0,1)))</span><br></pre></td></tr></table></figure>
+<h2 id="shape不同的array计算"><a href="#shape不同的array计算" class="headerlink" title="shape不同的array计算"></a>shape不同的array计算</h2><p>多维数组之间的运算一般都要求参与运算的array的shape要保持一致，但是也有一些运算没有这样的限制：</p>
+<ol>
+<li>矩阵乘法：矩阵的乘法需要用dot函数，满足矩阵乘法的要求即可</li>
+<li>参与运算的一个数组的shape是其中另一个数组shape的一部分</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr1 = np.arange(12).reshape((2,6))</span><br><span class="line">arr2 = np.arange(0,6)</span><br><span class="line">arr1 / arr2</span><br></pre></td></tr></table></figure>
+<h2 id="添加和删减数组成员"><a href="#添加和删减数组成员" class="headerlink" title="添加和删减数组成员"></a>添加和删减数组成员</h2><p>这一部分对于我个人来说是最不熟悉的，因为在一般情况下创建新的数组然后赋值，同样也可以达到添加和删减的效果。只不过有时候赋值操作需要使用for循环来实现而无法直接完成，这个时候使用numpy数组提供的添加和删除操作就方便多了。</p>
+<h4 id="1-append操作"><a href="#1-append操作" class="headerlink" title="1. append操作"></a>1. append操作</h4><p>append操作原数组不变，返回的数组将变成一维，然后再后面追加元素:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">orig_arr = np.arange(12).reshape(2,2,3)</span><br><span class="line">ap_arr = np.append(orig_arr, [100,100])</span><br></pre></td></tr></table></figure>
+<p>append也可以沿着这某一个维度添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">orig_arr = np.arange(12).reshape(2,2,3)</span><br><span class="line">orig_arr1 = np.arange(112,124).reshape(2,2,3)</span><br><span class="line">np.append(orig_arr, orig_arr1, axis=2)</span><br></pre></td></tr></table></figure>
+<h4 id="2-hstack操作"><a href="#2-hstack操作" class="headerlink" title="2. hstack操作"></a>2. hstack操作</h4><p>与append在axis设置为1时是一样的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">orig_arr = np.arange(12).reshape(2,2,3)</span><br><span class="line">orig_arr1 = np.arange(112,124).reshape(2,2,3)</span><br><span class="line">ret_arr = np.hstack((orig_arr,orig_arr1))</span><br><span class="line">ret_arr, ret_arr.shape</span><br></pre></td></tr></table></figure>
+<h4 id="3-insert操作"><a href="#3-insert操作" class="headerlink" title="3. insert操作"></a>3. insert操作</h4><p>insert操作实际上也是重新生成一个新的数组，它于append的区别是，append只能够再尾部添加，而insert能够指定位置添加，insert也可以指定纬度：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ins_arr = np.insert(orig_arr, 1, 666)</span><br><span class="line">ins_arr = np.insert(orig_arr, (1,2), 666, axis=2)</span><br></pre></td></tr></table></figure>
+<h4 id="4-delete操作"><a href="#4-delete操作" class="headerlink" title="4. delete操作"></a>4. delete操作</h4><p>同上delete是新生成数组而不是再原数组上删除，delete可以删除指定位置的元素，多维数组删除一个元素会退化为一维，也可以可以在指定纬度上的数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">del_arr = np.delete(orig_arr, 1)</span><br><span class="line">del_arr = np.delete(orig_arr, 1, axis=1)</span><br></pre></td></tr></table></figure>
+<h2 id="Mask-Array"><a href="#Mask-Array" class="headerlink" title="Mask Array"></a>Mask Array</h2><p>虽然mask数组在实际工作使用中得很多，但是有些细节还是不是很清楚，所以这里会注重一些使用中没有关注到的细节。</p>
+<h4 id="1-运算优先级"><a href="#1-运算优先级" class="headerlink" title="1. 运算优先级"></a>1. 运算优先级</h4><p>mask数组一般由关系运算得到，对于很多关系运算符需要注意得是其运算优先级，生成的mask与原数组同shape</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nd_arr = np.arange(36).reshape((3,4,3))</span><br><span class="line">ma_ndarr = nd_arr % 5 == 0</span><br></pre></td></tr></table></figure>
+<h4 id="2-作为引索使用"><a href="#2-作为引索使用" class="headerlink" title="2. 作为引索使用"></a>2. 作为引索使用</h4><p>使用mask可以得到子数组，但是多维数组在用mask引索得到得子数组是一维的：</p>
+<h4 id="3-多个mask联合"><a href="#3-多个mask联合" class="headerlink" title="3. 多个mask联合"></a>3. 多个mask联合</h4><p>可以多个mask联合使用，需要使用相应的逻辑运算函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arr = np.arange(10)</span><br><span class="line">ma_arr1 = arr % 3 == 0</span><br><span class="line">ma_arr2 = arr &gt; 5</span><br><span class="line">comb_ma = np.logical_and(ma_arr1, ma_arr2)</span><br></pre></td></tr></table></figure>
+<h2 id="使用set-printoptions函数设置打印格式"><a href="#使用set-printoptions函数设置打印格式" class="headerlink" title="使用set_printoptions函数设置打印格式"></a>使用set_printoptions函数设置打印格式</h2><p>在打印计算的结果的时候，最常见的一个问题是结果过小，显示的数字太长，不方便阅读，可以使用set_printoptions的precision参数设置显示精度，除此之外set_printoptions还有更多的设置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">np.set_printoptions(precision=6)</span><br><span class="line">print(arr1/7)</span><br></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/11/10/numpy的基础操作1/" data-id="cjobgoe48001nfcvdfnjorkam" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-全卷积神经网络FCN介绍" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -286,7 +466,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/06/18/全卷积神经网络FCN介绍/" data-id="cjobghsv0002cz8vdx44foa0m" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/06/18/全卷积神经网络FCN介绍/" data-id="cjobgoe4p002mfcvdqhc4h9vf" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -450,7 +630,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/06/18/对极几何的理解/" data-id="cjobghsw0003vz8vd27meuvkb" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/06/18/对极几何的理解/" data-id="cjobgoe5h0043fcvdyv1piyq1" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -610,7 +790,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/26/SpatialTransformerNetwork了解/" data-id="cjobghsu1000wz8vd3r5c779a" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/26/SpatialTransformerNetwork了解/" data-id="cjobgoe3s000vfcvd0hhmsapo" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -818,7 +998,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/23/使用OpenCV进行相机标定/" data-id="cjobghsuy0029z8vdnwdper22" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/23/使用OpenCV进行相机标定/" data-id="cjobgoe4k002efcvdqk088wup" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1000,187 +1180,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjobghstg0009z8vdx84rprb5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-numpy的基础操作1" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/05/19/numpy的基础操作1/">numpy的基础操作1</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/05/19/numpy的基础操作1/">
-            <time datetime="2018-05-19T02:34:38.000Z" itemprop="datePublished">2018-05-19</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/开发工具环境/">开发工具环境</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/numpy/">numpy</a>, <a class="tag-link" href="/tags/python/">python</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="参考教程"><a href="#参考教程" class="headerlink" title="参考教程"></a>参考教程</h2><p>系列视频：<a href="https://www.bilibili.com/video/av11263377" target="_blank" rel="noopener">https://www.bilibili.com/video/av11263377</a></p>
-<p>本文的知识点将只包括numpy数据的基础使用方法，将会涉及到如下内容：</p>
-<ol>
-<li>numpy ndarry基本数组的生成</li>
-<li>数组深浅拷贝</li>
-<li>数组的基本形状改变</li>
-<li>指定维度上的计算</li>
-<li>不同shape也可以运算的操作</li>
-<li>数组的增删操作</li>
-<li>Mask array的一些特性</li>
-<li>小数数组打印的技巧</li>
-</ol>
-<p>不过本文是属于查漏补缺性质的，重点在那些容易忽略的地方，而那些大多数人都知道的部分就不会再细写了。</p>
-<h2 id="linspace函数的使用-数组初始化"><a href="#linspace函数的使用-数组初始化" class="headerlink" title="linspace函数的使用(数组初始化)"></a>linspace函数的使用(数组初始化)</h2><p>之前的工作中，创建numpy的数组我一直都习惯用arange、zeros、ones这几个函数，而对linspace这个函数却不是很熟悉。linspace与arange的作用有些相似，都能生成等间隔的数组，但是两者有如下区别：</p>
-<ol>
-<li>需要固定步长用arange，而需要固定生成数目的个数用linspace，因为linspace会自动计算步长，设置retstep参数可以返回计算的步长</li>
-<li>arange生成的数组不包endpoint的值，而linspace则包含</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.linspace(0, 15, 5, retstep=True)</span><br></pre></td></tr></table></figure>
-<h2 id="view和copy-浅拷贝与深拷贝"><a href="#view和copy-浅拷贝与深拷贝" class="headerlink" title="view和copy(浅拷贝与深拷贝)"></a>view和copy(浅拷贝与深拷贝)</h2><p>view时浅拷贝，copy时深拷贝，在我的一般使用中只用copy就可以满足了，不过其实view也有比较好的应用场景，如同一数组希望用<strong>不同维度</strong>或<strong>不同的类型</strong>的形式使用，下面代码，arr_v2是arr_v1的view，但是在使用Ⅹ不仅将其纬度改变了还将其元素类型也改变了，对arr_v2的修改会影响arr_v1：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arr_v1 = np.array([1,5,10,15,20,25])</span><br><span class="line">arr_v2 = arr_v1.view()</span><br><span class="line">arr_v2.shape = (2,3)</span><br><span class="line">arr_v2.dtype = np.int8</span><br><span class="line">arr_v2[2,2] =255</span><br></pre></td></tr></table></figure>
-<h2 id="修改reshape"><a href="#修改reshape" class="headerlink" title="修改reshape"></a>修改reshape</h2><h4 id="1-reshape"><a href="#1-reshape" class="headerlink" title="1. reshape"></a>1. reshape</h4><p>shape相关的函数最常用的就是reshape了，但是<em>注意：reshape函数是view而不是copy</em></p>
-<h4 id="2-ravel函数和flat属性"><a href="#2-ravel函数和flat属性" class="headerlink" title="2. ravel函数和flat属性"></a>2. ravel函数和flat属性</h4><p>ravel将多维数组转为一个一维数组, flat属性则提供是一个迭代器顺序读取数组，使用代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># ravel</span><br><span class="line">orig_arr = np.arange(12).reshape(2,2,3)</span><br><span class="line">new_arr = orig_arr.ravel()</span><br><span class="line"># flat</span><br><span class="line">for i in orig_arr.flat:</span><br><span class="line">    print(i)</span><br></pre></td></tr></table></figure>
-<h2 id="指定操作的维度"><a href="#指定操作的维度" class="headerlink" title="指定操作的维度"></a>指定操作的维度</h2><p>默认的sum、mean等操作是对数组中所有的元素进行对应的计算，如果只希望在某一个维度上或者几个维度上操作则需要设置其axis参数:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arr1 = np.arange(12).reshape((2,2,3))</span><br><span class="line">print(arr1.mean())</span><br><span class="line">print(arr1.mean(axis=0))</span><br><span class="line">print(arr1.mean(axis=(0,1)))</span><br></pre></td></tr></table></figure>
-<h2 id="shape不同的array计算"><a href="#shape不同的array计算" class="headerlink" title="shape不同的array计算"></a>shape不同的array计算</h2><p>多维数组之间的运算一般都要求参与运算的array的shape要保持一致，但是也有一些运算没有这样的限制：</p>
-<ol>
-<li>矩阵乘法：矩阵的乘法需要用dot函数，满足矩阵乘法的要求即可</li>
-<li>参与运算的一个数组的shape是其中另一个数组shape的一部分</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr1 = np.arange(12).reshape((2,6))</span><br><span class="line">arr2 = np.arange(0,6)</span><br><span class="line">arr1 / arr2</span><br></pre></td></tr></table></figure>
-<h2 id="添加和删减数组成员"><a href="#添加和删减数组成员" class="headerlink" title="添加和删减数组成员"></a>添加和删减数组成员</h2><p>这一部分对于我个人来说是最不熟悉的，因为在一般情况下创建新的数组然后赋值，同样也可以达到添加和删减的效果。只不过有时候赋值操作需要使用for循环来实现而无法直接完成，这个时候使用numpy数组提供的添加和删除操作就方便多了。</p>
-<h4 id="1-append操作"><a href="#1-append操作" class="headerlink" title="1. append操作"></a>1. append操作</h4><p>append操作原数组不变，返回的数组将变成一维，然后再后面追加元素:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">orig_arr = np.arange(12).reshape(2,2,3)</span><br><span class="line">ap_arr = np.append(orig_arr, [100,100])</span><br></pre></td></tr></table></figure>
-<p>append也可以沿着这某一个维度添加：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">orig_arr = np.arange(12).reshape(2,2,3)</span><br><span class="line">orig_arr1 = np.arange(112,124).reshape(2,2,3)</span><br><span class="line">np.append(orig_arr, orig_arr1, axis=2)</span><br></pre></td></tr></table></figure>
-<h4 id="2-hstack操作"><a href="#2-hstack操作" class="headerlink" title="2. hstack操作"></a>2. hstack操作</h4><p>与append在axis设置为1时是一样的:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">orig_arr = np.arange(12).reshape(2,2,3)</span><br><span class="line">orig_arr1 = np.arange(112,124).reshape(2,2,3)</span><br><span class="line">ret_arr = np.hstack((orig_arr,orig_arr1))</span><br><span class="line">ret_arr, ret_arr.shape</span><br></pre></td></tr></table></figure>
-<h4 id="3-insert操作"><a href="#3-insert操作" class="headerlink" title="3. insert操作"></a>3. insert操作</h4><p>insert操作实际上也是重新生成一个新的数组，它于append的区别是，append只能够再尾部添加，而insert能够指定位置添加，insert也可以指定纬度：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ins_arr = np.insert(orig_arr, 1, 666)</span><br><span class="line">ins_arr = np.insert(orig_arr, (1,2), 666, axis=2)</span><br></pre></td></tr></table></figure>
-<h4 id="4-delete操作"><a href="#4-delete操作" class="headerlink" title="4. delete操作"></a>4. delete操作</h4><p>同上delete是新生成数组而不是再原数组上删除，delete可以删除指定位置的元素，多维数组删除一个元素会退化为一维，也可以可以在指定纬度上的数据：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">del_arr = np.delete(orig_arr, 1)</span><br><span class="line">del_arr = np.delete(orig_arr, 1, axis=1)</span><br></pre></td></tr></table></figure>
-<h2 id="Mask-Array"><a href="#Mask-Array" class="headerlink" title="Mask Array"></a>Mask Array</h2><p>虽然mask数组在实际工作使用中得很多，但是有些细节还是不是很清楚，所以这里会注重一些使用中没有关注到的细节。</p>
-<h4 id="1-运算优先级"><a href="#1-运算优先级" class="headerlink" title="1. 运算优先级"></a>1. 运算优先级</h4><p>mask数组一般由关系运算得到，对于很多关系运算符需要注意得是其运算优先级，生成的mask与原数组同shape</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nd_arr = np.arange(36).reshape((3,4,3))</span><br><span class="line">ma_ndarr = nd_arr % 5 == 0</span><br></pre></td></tr></table></figure>
-<h4 id="2-作为引索使用"><a href="#2-作为引索使用" class="headerlink" title="2. 作为引索使用"></a>2. 作为引索使用</h4><p>使用mask可以得到子数组，但是多维数组在用mask引索得到得子数组是一维的：</p>
-<h4 id="3-多个mask联合"><a href="#3-多个mask联合" class="headerlink" title="3. 多个mask联合"></a>3. 多个mask联合</h4><p>可以多个mask联合使用，需要使用相应的逻辑运算函数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arr = np.arange(10)</span><br><span class="line">ma_arr1 = arr % 3 == 0</span><br><span class="line">ma_arr2 = arr &gt; 5</span><br><span class="line">comb_ma = np.logical_and(ma_arr1, ma_arr2)</span><br></pre></td></tr></table></figure>
-<h2 id="使用set-printoptions函数设置打印格式"><a href="#使用set-printoptions函数设置打印格式" class="headerlink" title="使用set_printoptions函数设置打印格式"></a>使用set_printoptions函数设置打印格式</h2><p>在打印计算的结果的时候，最常见的一个问题是结果过小，显示的数字太长，不方便阅读，可以使用set_printoptions的precision参数设置显示精度，除此之外set_printoptions还有更多的设置:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">np.set_printoptions(precision=6)</span><br><span class="line">print(arr1/7)</span><br></pre></td></tr></table></figure>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/05/19/numpy的基础操作1/" data-id="cjobghsub001az8vdpug19gd7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjobgoe340005fcvdgqxs2u8l" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1408,7 +1408,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/19/一个简单数据管理python项目教程/" data-id="cjobghsuj001lz8vdxgdo7di4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/19/一个简单数据管理python项目教程/" data-id="cjobgoe4i0026fcvdo1te29yr" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1591,7 +1591,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/05/cython介绍/" data-id="cjobghsu70013z8vdfrcbdss3" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/05/cython介绍/" data-id="cjobgoe3y001afcvdhmmvla2l" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1749,7 +1749,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/16/B站新番信息爬虫设计/" data-id="cjobghssu0001z8vdc5mfdey2" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/03/16/B站新番信息爬虫设计/" data-id="cjobgoe2n0000fcvd4ao4su60" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1918,7 +1918,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/01/17/搜索算法整理/" data-id="cjobghsw2003zz8vd2hnqn5tj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/01/17/搜索算法整理/" data-id="cjobgoe5j0045fcvdyzlzw4hs" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -2011,6 +2011,25 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/11/10/numpy的基础操作1/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/开发工具环境/">开发工具环境</a></p>
+                            <p class="item-title"><a href="/2018/11/10/numpy的基础操作1/" class="title">numpy的基础操作</a></p>
+                            <p class="item-date"><time datetime="2018-11-10T13:02:28.000Z" itemprop="datePublished">2018-11-10</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/06/18/全卷积神经网络FCN介绍/" class="thumbnail">
     
     
@@ -2084,25 +2103,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/05/19/JupyterNotebook使用技巧/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/markdownImage/Nbextensions.jpg)" alt="Jupyter Notebook使用技巧" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/技术/开发工具环境/">开发工具环境</a></p>
-                            <p class="item-title"><a href="/2018/05/19/JupyterNotebook使用技巧/" class="title">Jupyter Notebook使用技巧</a></p>
-                            <p class="item-date"><time datetime="2018-05-19T07:23:05.000Z" itemprop="datePublished">2018-05-19</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -2121,7 +2121,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">7</span></li></ul>
         </div>
     </div>
 
