@@ -13,12 +13,12 @@
 <meta property="og:site_name" content="Harry Mei&#39;Blog">
 <meta property="og:description" content="前言在了解过EM算法后，再来看GMM就轻松多了，当然对于我来说除了GMM的基本原理外，更重要的是需要利用GMM算法来做视频的运动检测。 GMM简介GMM是Gaussian Mixed Model的简称，中文名为高斯混合模型，基本原理其实十分简单，就是用多个不同的高斯模型线性叠加来拟合实际的数据分布。如下图为截取网友介绍GMM博文的图像，其中使用了两个高斯分布来拟合的实际的数据点分布：  假定有随机">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/markdownImage/deepnet.png">
-<meta property="og:updated_time" content="2018-11-17T04:22:36.668Z">
+<meta property="og:image" content="http://yoursite.com/markdownImage/GMM.png">
+<meta property="og:updated_time" content="2018-11-17T04:26:53.876Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GMM高斯混合模型的使用">
 <meta name="twitter:description" content="前言在了解过EM算法后，再来看GMM就轻松多了，当然对于我来说除了GMM的基本原理外，更重要的是需要利用GMM算法来做视频的运动检测。 GMM简介GMM是Gaussian Mixed Model的简称，中文名为高斯混合模型，基本原理其实十分简单，就是用多个不同的高斯模型线性叠加来拟合实际的数据分布。如下图为截取网友介绍GMM博文的图像，其中使用了两个高斯分布来拟合的实际的数据点分布：  假定有随机">
-<meta name="twitter:image" content="http://yoursite.com/markdownImage/deepnet.png">
+<meta name="twitter:image" content="http://yoursite.com/markdownImage/GMM.png">
     
 
     
@@ -269,6 +269,11 @@
 <p>图像的背景为每个像素的灰度值其对应的第一个高斯模型的平均值，当当前图像像素值与已存在的第k个高斯模型匹配，并且前k-1个高斯模型的权值之和小于阈值bg_threshold ，则将当前像素归为背景，像素值设为0，否则归为前景，像素值设为255。</p>
 <h2 id="在opencv中的使用"><a href="#在opencv中的使用" class="headerlink" title="在opencv中的使用"></a>在opencv中的使用</h2><p>GMM在opencv中有对应的算法实现：BackgroundSubtractorMOG和BackgroundSubtractorMOG2，BackgroundSubtractorMOG2是在BackgroundSubtractorMOG的改进，具体可以查看opencv的文档。</p>
 <p>opencv的官方文档中提供了简单的使用实例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> cv2 <span class="keyword">as</span> cv</span><br><span class="line"></span><br><span class="line">cap = cv.VideoCapture(<span class="string">'vtest.avi'</span>)</span><br><span class="line"></span><br><span class="line">fgbg = cv.createBackgroundSubtractorMOG2()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>):</span><br><span class="line">    ret, frame = cap.read()</span><br><span class="line"></span><br><span class="line">    fgmask = fgbg.apply(frame)</span><br><span class="line"></span><br><span class="line">    cv.imshow(<span class="string">'frame'</span>,fgmask)</span><br><span class="line">    k = cv.waitKey(<span class="number">30</span>) &amp; <span class="number">0xff</span></span><br><span class="line">    <span class="keyword">if</span> k == <span class="number">27</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">cap.release()</span><br><span class="line">cv.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://blog.csdn.net/jinping_shi/article/details/59613054" target="_blank" rel="noopener">高斯混合模型（GMM）及其EM算法的理解</a></li>
+<li><a href="https://blog.csdn.net/sinat_25885063/article/details/44197885" target="_blank" rel="noopener">OpenCV之基于GMM的运动目标检测</a></li>
+</ol>
 
         
         </div>
@@ -279,7 +284,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/07/13/GMM高斯混合模型的使用/" data-id="cjoky5epk000690vdzu10ppo4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/07/13/GMM高斯混合模型的使用/" data-id="cjokyane50006gwvddo3lvi9c" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -453,7 +458,7 @@
                             <a href="/2018/07/13/GMM高斯混合模型的使用/" class="thumbnail">
     
     
-        <span style="background-image:url(/markdownImage/deepnet.png)" alt="GMM高斯混合模型的使用" class="thumbnail-image"></span>
+        <span style="background-image:url(/markdownImage/GMM.png)" alt="GMM高斯混合模型的使用" class="thumbnail-image"></span>
     
 </a>
 

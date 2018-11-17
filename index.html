@@ -290,7 +290,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/11/17/numpy的高级操作/" data-id="cjoky5eqv002190vdalhqcgql" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/11/17/numpy的高级操作/" data-id="cjokyanfi001wgwvdju2nxg4g" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -447,7 +447,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/11/10/numpy的基础操作2/" data-id="cjoky5equ001x90vd1kl075kj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/11/10/numpy的基础操作2/" data-id="cjokyanfc001ogwvd850r747c" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -627,7 +627,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/11/10/numpy的基础操作1/" data-id="cjoky5eqo001m90vdmnjj77mt" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/11/10/numpy的基础操作1/" data-id="cjokyanfs0024gwvd8ncaaqv7" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -759,6 +759,11 @@
 <p>图像的背景为每个像素的灰度值其对应的第一个高斯模型的平均值，当当前图像像素值与已存在的第k个高斯模型匹配，并且前k-1个高斯模型的权值之和小于阈值bg_threshold ，则将当前像素归为背景，像素值设为0，否则归为前景，像素值设为255。</p>
 <h2 id="在opencv中的使用"><a href="#在opencv中的使用" class="headerlink" title="在opencv中的使用"></a>在opencv中的使用</h2><p>GMM在opencv中有对应的算法实现：BackgroundSubtractorMOG和BackgroundSubtractorMOG2，BackgroundSubtractorMOG2是在BackgroundSubtractorMOG的改进，具体可以查看opencv的文档。</p>
 <p>opencv的官方文档中提供了简单的使用实例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> cv2 <span class="keyword">as</span> cv</span><br><span class="line"></span><br><span class="line">cap = cv.VideoCapture(<span class="string">'vtest.avi'</span>)</span><br><span class="line"></span><br><span class="line">fgbg = cv.createBackgroundSubtractorMOG2()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>):</span><br><span class="line">    ret, frame = cap.read()</span><br><span class="line"></span><br><span class="line">    fgmask = fgbg.apply(frame)</span><br><span class="line"></span><br><span class="line">    cv.imshow(<span class="string">'frame'</span>,fgmask)</span><br><span class="line">    k = cv.waitKey(<span class="number">30</span>) &amp; <span class="number">0xff</span></span><br><span class="line">    <span class="keyword">if</span> k == <span class="number">27</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">cap.release()</span><br><span class="line">cv.destroyAllWindows()</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://blog.csdn.net/jinping_shi/article/details/59613054" target="_blank" rel="noopener">高斯混合模型（GMM）及其EM算法的理解</a></li>
+<li><a href="https://blog.csdn.net/sinat_25885063/article/details/44197885" target="_blank" rel="noopener">OpenCV之基于GMM的运动目标检测</a></li>
+</ol>
 
         
         </div>
@@ -769,7 +774,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/07/13/GMM高斯混合模型的使用/" data-id="cjoky5epk000690vdzu10ppo4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/07/13/GMM高斯混合模型的使用/" data-id="cjokyane50006gwvddo3lvi9c" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -910,7 +915,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/07/09/EM算法理解/" data-id="cjoky5eot000090vd40khibob" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/07/09/EM算法理解/" data-id="cjokyandv0004gwvd0u6t5fbo" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1065,7 +1070,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/06/18/全卷积神经网络FCN介绍/" data-id="cjoky5erc002s90vdgckf9mia" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/06/18/全卷积神经网络FCN介绍/" data-id="cjokyangg0032gwvd4e1kbq1k" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1229,7 +1234,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/06/18/对极几何的理解/" data-id="cjoky5esb004e90vd31l41yv5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/06/18/对极几何的理解/" data-id="cjokyanha004hgwvdnorva09i" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1389,7 +1394,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/26/SpatialTransformerNetwork了解/" data-id="cjoky5eq5000z90vdde5mn91e" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/26/SpatialTransformerNetwork了解/" data-id="cjokyanes0010gwvd40citg9s" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1597,7 +1602,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/23/使用OpenCV进行相机标定/" data-id="cjoky5ere002w90vduw0i7kf6" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/23/使用OpenCV进行相机标定/" data-id="cjokyanga002qgwvd3iuyjupj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1779,7 +1784,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjoky5epn000990vdtcafnocr" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/05/19/JupyterNotebook使用技巧/" data-id="cjokyane9000agwvdf2b7i3bz" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1932,7 +1937,7 @@
                             <a href="/2018/07/13/GMM高斯混合模型的使用/" class="thumbnail">
     
     
-        <span style="background-image:url(/markdownImage/deepnet.png)" alt="GMM高斯混合模型的使用" class="thumbnail-image"></span>
+        <span style="background-image:url(/markdownImage/GMM.png)" alt="GMM高斯混合模型的使用" class="thumbnail-image"></span>
     
 </a>
 
