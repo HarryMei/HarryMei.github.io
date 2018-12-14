@@ -14,7 +14,7 @@
 <meta property="og:description" content="介绍反向传播，即Backpropagation（BP）是the backward propagation of errors的缩写，顾名思义就是误差向后传播（输入/激励前向传播）。反向传播算法对深度学习的发展具有极其重要的意义，可以说是当前深度学习领域中最为核心的一个算法了，它的存在让我们训练更深的深度神经网络变得简单易行。 反向传播算法使用在如梯度下降的优化算法中，作为其计算个网络层中参数的梯度">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/markdownImage/calcgraph.png">
-<meta property="og:updated_time" content="2018-12-14T14:35:28.478Z">
+<meta property="og:updated_time" content="2018-12-14T14:38:33.087Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="反向传播算法推导">
 <meta name="twitter:description" content="介绍反向传播，即Backpropagation（BP）是the backward propagation of errors的缩写，顾名思义就是误差向后传播（输入/激励前向传播）。反向传播算法对深度学习的发展具有极其重要的意义，可以说是当前深度学习领域中最为核心的一个算法了，它的存在让我们训练更深的深度神经网络变得简单易行。 反向传播算法使用在如梯度下降的优化算法中，作为其计算个网络层中参数的梯度">
@@ -289,7 +289,7 @@
 <p><img src="/markdownImage/bp4.jpg" alt=""></p>
 <p>从上面这些公式可以看到，W和B的偏导是从输出端的偏导开始求起，然后逐层求到输入端的。</p>
 <h2 id="全连接神经网络的形式"><a href="#全连接神经网络的形式" class="headerlink" title="全连接神经网络的形式"></a>全连接神经网络的形式</h2><p>以上面的计算图为基础，我们开始分析特定的网络，以常见的全连接神经网络多分类器为例子，简单示意图如下（只是示意图，不是说明其中每层中神经元的个数就是图中所示）：</p>
-<p><img src="Image/mlpnet.png" alt="mlp"></p>
+<p><img src="markdownImage/mlpnet.png" alt="mlp"></p>
 <p>那么我们可以写出有一个隐含层（即总共两层）多分类网络的各个表达式：</p>
 <ul>
 <li>交叉熵损失函数j为，假定有n个类别，注意这里的求和是对后面向量中的元素求和，结果是一个标量：</li>
@@ -358,7 +358,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/12/14/反向传播算法推导/" data-id="cjpo4yqrk0041iwvdfr30aafw" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2018/12/14/反向传播算法推导/" data-id="cjpo527zs003uc8vdnio2y743" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
